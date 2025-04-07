@@ -11,5 +11,3 @@ import './styles/app.css';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
 
-const buttonResize = document.querySelector("button.btn-resize");
-buttonResize.addEventListener("click", () => window.location = "/files-interface/resize");
