@@ -12,6 +12,6 @@ final class MainController extends AbstractController
     #[Route('/', name: 'app_main')]
     public function index(): Response
     {
-        return new RedirectResponse("/files-interface/main");
+        return new RedirectResponse("/file-view/main");
     }
 }

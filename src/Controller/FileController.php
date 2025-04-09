@@ -2,26 +2,22 @@
 
 namespace App\Controller;
 
+use App\Service\FileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/files-interface', name: 'app_file')]
+#[Route('/file', name: 'app_file')]
 final class FileController extends AbstractController
 {
-    #[Route('/main', name: 'app_file_main')]
-    public function main(): Response
+    #[Route('/resize/{size}', requirements: ["size" => "\d+"], name: 'app_file_resize', methods: ['POST'])]
+    public function resizeAction(Request $request, FileService $fileService, int $size): Response
     {
-        return $this->render('file/index.html.twig', [
-            'controller_name' => 'FileController',
-        ]);
-    }
-
-    #[Route('/resize', name: 'app_file_resize')]
-    public function resize(): Response
-    {
-        return $this->render('file/resize.html.twig', [
-            'controller_name' => 'FileController',
-        ]);
+        $r = $fileService->resize($request->files->get('file'), $size);
+        return new Response("");
+        // return $this->render('file/resize.html.twig', [
+        //     'controller_name' => 'FileController',
+        // ]);
     }
 }
