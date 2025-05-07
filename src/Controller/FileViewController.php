@@ -24,4 +24,12 @@ final class FileViewController extends AbstractController
             'controller_name' => 'FileController',
         ]);
     }
+
+    #[Route('/convert', name: 'file_view_convert')]
+    public function convert(): Response
+    {
+        return $this->render('file/convert.html.twig', [
+            'controller_name' => 'FileController',
+        ]);
+    }
 };
