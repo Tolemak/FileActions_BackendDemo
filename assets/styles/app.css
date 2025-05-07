@@ -25,4 +25,9 @@ body {
         gap: 2vh;
         margin: 5vh;
     }
+
+    .button-back {
+        width: 30%;
+        height: 20%;
+    }
 }

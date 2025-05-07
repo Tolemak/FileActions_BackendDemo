@@ -3,34 +3,31 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}File actions
+			{% block title %}File Actions
 			{% endblock %}
-			{# Twig block 'title': Allows child templates to override the page title dynamically. #}
 		</title>
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 		{% block stylesheets %}
 			{{ vite_entry_link_tags('appmain') }}
-			{# Twig block 'stylesheets': Used to include CSS assets dynamically via Vite. #}
 		{% endblock %}
 
 		{% block javascripts %}
 			{{ vite_entry_script_tags('appmain') }}
-			{# Twig block 'javascripts': Used to include JavaScript assets dynamically via Vite. #}
 		{% endblock %}
 	</head>
-	<body>
+	<body class="bg-light text-center py-5">
 		{% block body %}
-			<div class="main-grid">
-				<h1>File actions</h1>
-				<div class="list-layout">
-					<button type="button" class="btn btn-primary btn-resize">Resize</button>
-					<button type="button" disabled class="btn btn-secondary">Convert extension</button>
-					<button type="button" disabled class="btn btn-success">Compress</button>
-					<button type="button" disabled class="btn btn-danger">Sepia</button>
-					<button type="button" disabled class="btn btn-warning">Rotate</button>
+			<div class="container">
+				<h1 class="display-4 text-primary mb-4">File Actions</h1>
+				<p class="lead text-muted mb-5">Choose an action to perform on your files.</p>
+				<div class="list-layout d-flex justify-content-center flex-wrap gap-3">
+					<a href="/file-view/resize" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Resize</a>
+					<button type="button" disabled class="btn btn-secondary btn-lg rounded-pill px-5 shadow">Convert Extension</button>
+					<button type="button" disabled class="btn btn-success btn-lg rounded-pill px-5 shadow">Compress</button>
+					<button type="button" disabled class="btn btn-danger btn-lg rounded-pill px-5 shadow">Sepia</button>
+					<button type="button" disabled class="btn btn-warning btn-lg rounded-pill px-5 shadow">Rotate</button>
 				</div>
 			</div>
-			{# Twig block 'body': Defines the main content area, which can be overridden in child templates. #}
 		{% endblock %}
 	</body>
 </html>
