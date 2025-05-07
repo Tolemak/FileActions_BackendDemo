@@ -1,0 +1,64 @@
+/* General Button Styling */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+    opacity: 0.9; /* Slight transparency for all buttons */
+}
+
+.btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    opacity: 1; /* Fully opaque on hover */
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: skewX(-45deg);
+    transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+/* Coming Soon Buttons */
+.btn-coming-soon {
+    background: linear-gradient(45deg, #6a0dad, #8e44ad);
+    color: #fff;
+    border: none;
+    cursor: not-allowed;
+    opacity: 0.2; /* More transparent for "Coming Soon" buttons */
+    transition: opacity 0.3s ease;
+}
+
+.btn-coming-soon:hover {
+    transform: none;
+    box-shadow: none;
+    opacity: 0.3; /* Slightly less transparent on hover */
+}
+
+.btn-coming-soon::after {
+    content: '✨';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1.5rem;
+    animation: sparkle 1.5s infinite ease-in-out;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: scale(1.2) rotate(20deg);
+    }
+}
