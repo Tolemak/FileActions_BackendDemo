@@ -32,4 +32,12 @@ final class FileViewController extends AbstractController
             'controller_name' => 'FileController',
         ]);
     }
+
+    #[Route('/compress', name: 'file_view_compress')]
+    public function compress(): Response
+    {
+        return $this->render('file/compress.html.twig', [
+            'controller_name' => 'FileController',
+        ]);
+    }
 };
