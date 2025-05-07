@@ -12,10 +12,10 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                app: "./assets/app.js",
-                appmain: "./assets/appmain.js",
-                appresize: "./assets/appresize.js",
-                appconvert: "./assets/appconvert.js"
+                app: "./assets/scripts/app.ts",
+                appmain: "./assets/scripts/sub/appmain.ts",
+                appresize: "./assets/scripts/sub/appresize.ts",
+                appconvert: "./assets/scripts/sub/appconvert.ts"
             },
         }
     },
