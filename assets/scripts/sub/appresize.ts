@@ -1,9 +1,8 @@
-import * as FilePond from 'filepond';
 import 'filepond/dist/filepond.min.css';
 import "../app.js";
 import '../../styles/resize.css';
 import Swal from 'sweetalert2';
-import { saveBlobAsFile } from '../utils.js';
+import { saveBlobAsFile, sweetAlertErrorRequest } from '../utils.js';
 import { SubAppWithFilePond } from './subappwithfilepond.js';
 
 
@@ -22,11 +21,10 @@ async function sweetChooseSize() {
         cancelButtonText: "Cancel",
     });
 }
-const filePondElement = document.querySelector('input')
 
 class ResizeApp extends SubAppWithFilePond {
-    constructor(filePondElement: HTMLInputElement) {
-        super(filePondElement);
+    constructor() {
+        super(document.querySelector('input.filepond') as HTMLInputElement);
     }
 
     async processFile(fieldName: string, file: File, _metadata, _load, _error, _progress, abort, _transfer, _options): Promise<void> {
@@ -51,6 +49,7 @@ class ResizeApp extends SubAppWithFilePond {
                 if (res.status === 200) {
                     return res.blob();
                 } else {
+                    sweetAlertErrorRequest(res);
                     throw new Error("Error");
                 }
             })
@@ -61,4 +60,4 @@ class ResizeApp extends SubAppWithFilePond {
 
 }
 
-new ResizeApp(filePondElement as HTMLInputElement);
+new ResizeApp();

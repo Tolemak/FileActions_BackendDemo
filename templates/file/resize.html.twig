@@ -1,15 +1,18 @@
 {% extends 'file/file_action.html.twig' %}
 
-{% block title %}Resize{% endblock %}
-{% block header %}Resize Your Image{% endblock %}
+{% block title %}Resize
+{% endblock %}
+{% block header %}Resize Your Image
+{% endblock %}
 {% block stylesheets %}
 	{{ vite_entry_link_tags('appresize') }}
 {% endblock %}
 {% block javascripts %}
-{{ vite_entry_script_tags('appresize') }}
+	{{ vite_entry_script_tags('appresize') }}
 {% endblock %}
-{% block description %}Upload an image and adjust its size with ease.{% endblock %}
+{% block description %}Upload an image and adjust its size with ease.
+{% endblock %}
 {% block content %}
-    <input type="file" class="filepond mb-3" name="filepond" accept="image/png, image/jpeg, image/gif"/>
-    <button class="btn btn-success btn-lg rounded-pill px-5 shadow button-process">Resize</button>
+	<input type="file" class="filepond mb-3" name="filepond" accept="image/png, image/jpeg, image/gif"/>
+	<button class="btn btn-success btn-lg rounded-pill px-5 shadow button-process">Resize</button>
 {% endblock %}
