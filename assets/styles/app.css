@@ -1,6 +1,9 @@
 body {
     background-color: skyblue;
 
+    /* Nested selectors: 
+    This demonstrates the use of hierarchical (nested) CSS. 
+    The .list-layout class is scoped within the body tag. */
     .list-layout {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -9,6 +12,8 @@ body {
 
     .main-grid {
         display: grid;
+        /* This grid layout is responsive, using auto-fill to adjust the number of columns 
+        based on the available space, with a minimum column width of 500px. */
         grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
         gap: 2vh;
         margin: 5vh;
