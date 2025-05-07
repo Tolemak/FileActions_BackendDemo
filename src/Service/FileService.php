@@ -41,4 +41,15 @@ class FileService
         $image->writeImage($temp);
         return $temp;
     }
+
+    function compress(UploadedFile $uploadedFile, int $ratio): string
+    {
+        $temp = tempnam(sys_get_temp_dir(), $uploadedFile->getClientOriginalName());
+        $this->filesystem->dumpFile($temp, $uploadedFile->getContent());
+        $image = new Imagick($temp);
+        $image->setImageCompression($ratio);
+        $image->setImageFormat($uploadedFile->getClientOriginalExtension());
+        $image->writeImage($temp);
+        return $temp;
+    }
 }

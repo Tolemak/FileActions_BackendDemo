@@ -1,0 +1,15 @@
+{% extends 'file/file_action.html.twig' %}
+
+{% block title %}Compress{% endblock %}
+{% block header %}Compress Your File{% endblock %}
+{% block stylesheets %}
+    {{ vite_entry_link_tags('appcompress') }}
+{% endblock %}
+{% block javascripts %}
+    {{ vite_entry_script_tags('appcompress') }}
+{% endblock %}
+{% block description %}Upload a file and reduce its size without losing quality.{% endblock %}
+{% block content %}
+    <input type="file" class="filepond mb-3" name="filepond" accept="image/png, image/jpeg, image/gif"/>
+    <button class="btn btn-warning btn-lg rounded-pill px-5 shadow button-process">Compress</button>
+{% endblock %}

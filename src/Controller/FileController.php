@@ -67,6 +67,33 @@ final class FileController extends AbstractController
         }
     }
 
+    #[Route('/compress/{ratio}', requirements: ["ratio" => "\d+"], name: 'app_file_compress', methods: ['POST'])]
+    // Hierarchical route: '/file/resize/{size}' builds on the base '/file' route.
+    // Validates 'size' as a numeric parameter and restricts the method to POST.
+    public function compressAction(Request $request, FileService $fileService, int $ratio): Response
+    {
+        $file = array_values($request->files->all())[0] ?? null;
+        if ($this->checkTypicalIssues($file) !== null) {
+            return $this->checkTypicalIssues($file);
+        } else if ($ratio < 1 || $ratio > 100) {
+            return new Response("Compress ratio must be between 1 and 100", Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $r = $fileService->compress($file, $ratio);
+            return new BinaryFileResponse(
+                $r,
+                Response::HTTP_OK,
+                [
+                    'Content-Type' => $file->getClientMimeType(), // Maintains the original MIME type.
+                    'Content-Disposition' => 'attachment; filename="' . $file->getClientOriginalName() . '"', // Sets the original file name for download.
+                ]
+            );
+        } catch (\Exception $e) {
+            return new Response("Error compressing file: " . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     function checkTypicalIssues($file): Response | null
     {
         if ($file === null) {
