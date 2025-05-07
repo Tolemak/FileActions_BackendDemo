@@ -21,14 +21,10 @@ final class FileController extends AbstractController
     public function resizeAction(Request $request, FileService $fileService, int $size): Response
     {
         $file = array_values($request->files->all())[0] ?? null;
-        if ($file === null) {
-            return new Response("File not found", Response::HTTP_BAD_REQUEST);
-        } else if ($file->getClientMimeType() !== 'image/jpeg' && $file->getClientMimeType() !== 'image/png') {
-            return new Response("File must be a JPEG or PNG", Response::HTTP_BAD_REQUEST);
+        if ($this->checkTypicalIssues($file) !== null) {
+            return $this->checkTypicalIssues($file);
         } else if ($size < 10 || $size > 300) {
             return new Response("Size must be between 10 and 300", Response::HTTP_BAD_REQUEST);
-        } else if ($file->getSize() > 5000000) {
-            return new Response("File size must be less than 5MB", Response::HTTP_BAD_REQUEST);
         }
 
         try {
@@ -50,14 +46,10 @@ final class FileController extends AbstractController
     public function convertAction(Request $request, FileService $fileService, string $extension): Response
     {
         $file = array_values($request->files->all())[0] ?? null;
-        if ($file === null) {
-            return new Response("File not found", Response::HTTP_BAD_REQUEST);
-        } else if ($file->getClientMimeType() !== 'image/jpeg' && $file->getClientMimeType() !== 'image/png' && $file->getClientMimeType() !== 'image/gif') {
-            return new Response("File must be a JPEG or PNG or GIF", Response::HTTP_BAD_REQUEST);
+        if ($this->checkTypicalIssues($file) !== null) {
+            return $this->checkTypicalIssues($file);
         } else if ($extension !== 'jpeg' && $extension !== 'png' && $extension !== 'gif') {
             return new Response("Extension must be jpeg, png or gif", Response::HTTP_BAD_REQUEST);
-        } else if ($file->getSize() > 5000000) {
-            return new Response("File size must be less than 5MB", Response::HTTP_BAD_REQUEST);
         }
 
         try {
@@ -73,5 +65,17 @@ final class FileController extends AbstractController
         } catch (\Exception $e) {
             return new Response("Error converting file: " . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    function checkTypicalIssues($file): Response | null
+    {
+        if ($file === null) {
+            return new Response("File not found", Response::HTTP_BAD_REQUEST);
+        } else if ($file->getClientMimeType() !== 'image/jpeg' && $file->getClientMimeType() !== 'image/png' && $file->getClientMimeType() !== 'image/gif') {
+            return new Response("File must be a JPEG or PNG or GIF", Response::HTTP_BAD_REQUEST);
+        } else if ($file->getSize() > 5000000) {
+            return new Response("File size must be less than 5MB", Response::HTTP_BAD_REQUEST);
+        }
+        return null;;
     }
 }
