@@ -14,10 +14,11 @@
 {% endblock %}
 {% block content %}
 	<input type="file" class="filepond mb-3" name="filepond" accept="image/png, image/jpeg, image/gif"/>
-	<select class="form-select mb-3">
+	<select class="form-select mb-3" id="dest-extension">
 		<option value="jpeg">JPEG</option>
 		<option value="png">PNG</option>
 		<option value="gif">GIF</option>
 	</select>
-	<button class="btn btn-primary btn-lg rounded-pill px-5 shadow">Convert</button>
+	<button class="btn btn-primary btn-lg rounded-pill px-5 shadow button-process">Convert</button>
+
 {% endblock %}
