@@ -15,14 +15,8 @@
 }
 
 
-/**
- * Page Styles
- */
-html {
-    padding: 20vh 0 0;
-}
-
 .filepond--root {
     width: 170px;
     margin: 0 auto;
 }
+

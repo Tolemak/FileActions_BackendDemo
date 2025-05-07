@@ -1,9 +1,23 @@
 body {
     background-color: skyblue;
-}
 
-.list-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    .list-layout {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2vh;
+    }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+        gap: 2vh;
+        margin: 5vh;
+    }
+
+    .main-grid-subpage {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2vh;
+        margin: 5vh;
+    }
 }
