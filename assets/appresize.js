@@ -21,6 +21,7 @@ const filepond = FilePond.create(
         styleProgressIndicatorPosition: 'right bottom',
         styleButtonRemoveItemPosition: 'left bottom',
         styleButtonProcessItemPosition: 'right bottom',
+        instantUpload: false,
         server: {
 
             process: async (fieldName, file, _metadata, _load, _error, _progress, abort, _transfer, _options) => {
@@ -49,7 +50,7 @@ const filepond = FilePond.create(
                         }
                     })
                     .then(blob => {
-                        saveBlobAsFile(blob, file); 
+                        saveBlobAsFile(blob, file);
                     });
 
                 return {
@@ -90,3 +91,8 @@ function saveBlobAsFile(blob, file) {
     a.click();
     a.remove();
 }
+
+
+document.querySelector(".button-process").addEventListener("click", () => {
+    filepond.processFiles();
+});
