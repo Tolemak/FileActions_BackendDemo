@@ -18,20 +18,19 @@
 	</head>
 	<body>
 		{% block body %}
-			<h1>File actions</h1>
-
-			<div class="list-layout">
-				<button type="button" class="btn btn-primary btn-resize">Resize</button>
-				<button type="button" disabled class="btn btn-secondary">Convert extension</button>
-				<button type="button" disabled class="btn btn-success">Compress</button>
-				<button type="button" disabled class="btn btn-danger">Sepia</button>
-				<button type="button" disabled class="btn btn-warning">Rotate</button>
-				{# <button type="button" class="btn btn-info">Info</button> #}
-			{# <button type="button" class="btn btn-light">Light</button> #}
-				{# <button type="button" class="btn btn-dark">Dark</button> #}
+			<div class="main-grid">
+				<h1>File actions</h1>
+				<div class="list-layout">
+					<button type="button" class="btn btn-primary btn-resize">Resize</button>
+					<button type="button" disabled class="btn btn-secondary">Convert extension</button>
+					<button type="button" disabled class="btn btn-success">Compress</button>
+					<button type="button" disabled class="btn btn-danger">Sepia</button>
+					<button type="button" disabled class="btn btn-warning">Rotate</button>
+					{# <button type="button" class="btn btn-info">Info</button> #}
+				{# <button type="button" class="btn btn-light">Light</button> #}
+					{# <button type="button" class="btn btn-dark">Dark</button> #}
+				</div>
 			</div>
-
-
 		{% endblock %}
 	</body>
 </html>
