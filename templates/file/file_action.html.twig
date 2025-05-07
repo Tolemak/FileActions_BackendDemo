@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}File Action
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+		{% block stylesheets %}
+		{% endblock %}
+		{% block javascripts %}
+		{% endblock %}
+	</head>
+	<body class="bg-light text-center py-5">
+		<div class="container">
+			<a href="/" class="btn btn-outline-primary btn-sm rounded-pill mb-4 px-4 py-2 shadow-sm">← Back</a>
+			<h1 class="display-4 text-primary mb-4">
+				{% block header %}File Action
+				{% endblock %}
+			</h1>
+			<p class="lead text-muted mb-5">
+				{% block description %}Perform an action on your file.
+				{% endblock %}
+			</p>
+			<div class="card shadow-sm p-4"> {% block content %}{% endblock %}
+				</div>
+			</div>
+		</body>
+	</html>

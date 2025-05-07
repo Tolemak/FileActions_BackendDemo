@@ -15,6 +15,7 @@ export default defineConfig({
                 app: "./assets/app.js",
                 appmain: "./assets/appmain.js",
                 appresize: "./assets/appresize.js",
+                appconvert: "./assets/appconvert.js"
             },
         }
     },

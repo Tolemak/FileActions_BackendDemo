@@ -1,30 +1,15 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}Resize
-			{% endblock %}
-		</title>
-		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-		{% block stylesheets %}
-			{{ vite_entry_link_tags('appresize') }}
-		{% endblock %}
+{% extends 'file/file_action.html.twig' %}
 
-		{% block javascripts %}
-			{{ vite_entry_script_tags('appresize') }}
-		{% endblock %}
-	</head>
-	<body class="bg-light text-center py-5">
-		{% block body %}
-			<div class="container">
-				<a href="/" class="btn btn-outline-primary btn-sm rounded-pill mb-4 px-4 py-2 shadow-sm">← Back</a>
-				<h1 class="display-4 text-primary mb-4">Resize Your Image</h1>
-				<p class="lead text-muted mb-5">Upload an image and adjust its size with ease.</p>
-				<div class="card shadow-sm p-4">
-					<input type="file" class="filepond mb-3" name="filepond" accept="image/png, image/jpeg, image/gif"/>
-				</div>
-			</div>
-		{% endblock %}
-	</body>
-</html>
+{% block title %}Resize{% endblock %}
+{% block header %}Resize Your Image{% endblock %}
+{% block stylesheets %}
+	{{ vite_entry_link_tags('appresize') }}
+{% endblock %}
+{% block javascripts %}
+{{ vite_entry_script_tags('appresize') }}
+{% endblock %}
+{% block description %}Upload an image and adjust its size with ease.{% endblock %}
+{% block content %}
+    <input type="file" class="filepond mb-3" name="filepond" accept="image/png, image/jpeg, image/gif"/>
+    <button class="btn btn-success btn-lg rounded-pill px-5 shadow">Resize</button>
+{% endblock %}
