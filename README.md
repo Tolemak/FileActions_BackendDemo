@@ -1,8 +1,8 @@
-# SymfonyDemo
+# FileActions_BackendDemo
 
 ## About the Project
 
-SymfonyDemo is a demonstration project showcasing a full-stack application with a primary focus on backend development using PHP and the Symfony framework. It highlights best practices, clean architecture, and integration with modern tools and technologies.
+FileActions_BackendDemo is a demonstration project showcasing a full-stack application with a primary focus on backend development using PHP and the Symfony framework. It highlights best practices, clean architecture, and integration with modern tools and technologies.
 
 ### Features
 - Backend powered by **Symfony**.
