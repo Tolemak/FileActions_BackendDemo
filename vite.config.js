@@ -16,7 +16,7 @@ export default defineConfig({
                 appmain: "./assets/scripts/sub/appmain.ts",
                 appresize: "./assets/scripts/sub/appresize.ts",
                 appconvert: "./assets/scripts/sub/appconvert.ts",
-                appcompress: './assets/scripts/sub/appcompress.js', // Add this entry for the Compress feature
+                appcompress: './assets/scripts/sub/appcompress.ts', // Add this entry for the Compress feature
 
             },
         }
