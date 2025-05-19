@@ -10,4 +10,4 @@ services:
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf:z
       - ./php/php.ini:/usr/local/etc/php/php.ini:z
     ports:
-      - "8080:80"
+      - "40055:80"
