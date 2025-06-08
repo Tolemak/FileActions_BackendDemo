@@ -3,28 +3,38 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}File Action
-			{% endblock %}
+			File Actions Demo - {% block title_action %}File Action{% endblock %}
 		</title>
-		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🛠️</text></svg>">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 		{% block stylesheets %}
+			{{ vite_entry_link_tags('appmain') }} {# Include main styles for consistent header/footer if any #}
 		{% endblock %}
-		{% block javascripts %}
-		{% endblock %}
+		{% block javascripts_head %}{% endblock %}
 	</head>
-	<body class="bg-light text-center py-5">
+	<body class="bg-light py-5">
 		<div class="container">
-			<a href="/" class="btn btn-outline-primary btn-sm rounded-pill mb-4 px-4 py-2 shadow-sm">← Back</a>
-			<h1 class="display-4 text-primary mb-4">
-				{% block header %}File Action
-				{% endblock %}
-			</h1>
-			<p class="lead text-muted mb-5">
-				{% block description %}Perform an action on your file.
-				{% endblock %}
-			</p>
-			<div class="card shadow-sm p-4"> {% block content %}{% endblock %}
-				</div>
+			<nav aria-label="breadcrumb" class="mb-4">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{{ path('app_filefile_view_main') }}"><i class="fas fa-home"></i> Home</a></li>
+					<li class="breadcrumb-item active" aria-current="page">{% block breadcrumb_action %}Action{% endblock %}</li>
+				</ol>
+			</nav>
+
+			<div class="text-center">
+				<h1 class="display-4 text-primary mb-3 fw-bold">
+					{% block header %}File Action{% endblock %}
+				</h1>
+				<p class="lead text-muted col-md-8 mx-auto mb-5">
+					{% block description %}Perform an action on your file.
+					{% endblock %}
+				</p>
 			</div>
-		</body>
-	</html>
+			<div class="card shadow-lg p-4 p-md-5"> 
+				{% block content %}{% endblock %}
+			</div>
+		</div>
+		{% block javascripts_body %}
+		{% endblock %}
+	</body>
+</html>

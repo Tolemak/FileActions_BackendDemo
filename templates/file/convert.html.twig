@@ -1,24 +1,38 @@
 {% extends 'file/file_action.html.twig' %}
 
-{% block title %}Convert Extension
-{% endblock %}
-{% block header %}Convert File Extension
-{% endblock %}
+{% block title_action %}Convert Image Format{% endblock %}
+{% block breadcrumb_action %}Convert{% endblock %}
+
+{% block header %}Convert Image Format{% endblock %}
+
 {% block stylesheets %}
+	{{ parent() }} {# Inherit stylesheets from base template #}
 	{{ vite_entry_link_tags('appconvert') }}
 {% endblock %}
-{% block javascripts %}
+
+{% block javascripts_body %}
+	{{ parent() }}
 	{{ vite_entry_script_tags('appconvert') }}
 {% endblock %}
-{% block description %}Upload a file and convert its extension effortlessly.
-{% endblock %}
-{% block content %}
-	<input type="file" class="filepond mb-3" name="filepond" accept="image/png, image/jpeg, image/gif"/>
-	<select class="form-select mb-3" id="dest-extension">
-		<option value="jpeg">JPEG</option>
-		<option value="png">PNG</option>
-		<option value="gif">GIF</option>
-	</select>
-	<button class="btn btn-primary btn-lg rounded-pill px-5 shadow button-process">Convert</button>
 
+{% block description %}Upload an image and convert its format effortlessly. Choose the desired output format below.{% endblock %}
+
+{% block content %}
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-lg-6">
+			<input type="file" class="filepond mb-4" name="filepond" accept="image/png, image/jpeg, image/gif"/>
+			<div class="input-group mb-4">
+				<label class="input-group-text" for="dest-extension"><i class="fas fa-file-export me-2"></i>Target Format</label>
+				<select class="form-select form-select-lg" id="dest-extension">
+					<option value="jpeg">JPEG</option>
+					<option value="png">PNG</option>
+					<option value="gif">GIF</option>
+					<option value="webp">WEBP</option> {# Added WEBP as an option #}
+				</select>
+			</div>
+			<div class="text-center">
+				<button class="btn btn-secondary btn-lg rounded-pill px-5 shadow-sm button-process"><i class="fas fa-exchange-alt me-2"></i>Convert Format</button>
+			</div>
+		</div>
+	</div>
 {% endblock %}

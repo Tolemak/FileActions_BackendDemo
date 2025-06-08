@@ -1,16 +1,114 @@
-/* General Button Styling */
+/* General Body and Container Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa; /* Softer background */
+}
+
+.container {
+    max-width: 960px; /* Limit container width for better readability on large screens */
+}
+
+/* Headings and Text */
+.display-3 {
+    color: #0056b3; /* Darker primary color for heading */
+}
+
+.lead {
+    font-size: 1.15rem;
+    color: #5a6268; /* Slightly darker muted text */
+}
+
+/* Action Card Styling */
+.action-card {
+    border: none; /* Remove default card border */
+    border-radius: 15px; /* More rounded corners */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Softer, larger shadow on hover */
+}
+
+.action-card .card-body {
+    padding: 2rem; /* More padding inside cards */
+}
+
+.action-icon i {
+    transition: transform 0.3s ease;
+}
+
+.action-card:hover .action-icon i {
+    transform: scale(1.1);
+}
+
+.action-card .btn {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-card .btn:hover {
+    transform: translateY(-2px); /* Slight lift for button inside card */
+}
+
+/* Specific button colors for cards - ensure these match your Bootstrap theme or define them */
+.action-card .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.action-card .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.action-card .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.action-card .btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #545b62;
+}
+
+.action-card .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.action-card .btn-success:hover {
+    background-color: #1e7e34;
+    border-color: #1e7e34;
+}
+
+/* Coming Soon Card Styling */
+.card-coming-soon {
+    opacity: 0.7;
+    background-color: #e9ecef; /* Lighter background for disabled cards */
+}
+
+.card-coming-soon .action-icon i {
+    opacity: 0.5;
+}
+
+.text-danger-disabled { color: #dc3545; opacity: 0.5; }
+.text-warning-disabled { color: #ffc107; opacity: 0.5; }
+.text-info-disabled { color: #17a2b8; opacity: 0.5; }
+
+.btn-outline-secondary:disabled {
+    cursor: not-allowed;
+}
+
+/* General Button Styling (from original, can be merged or refined) */
 .btn {
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
-    opacity: 0.9; /* Slight transparency for all buttons */
+    /* transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease; */ /* Covered by card hover */
+    /* opacity: 0.9; */ /* Let card opacity handle this or set to 1 */
 }
 
-.btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    opacity: 1; /* Fully opaque on hover */
-}
+/* .btn:hover {
+    transform: translateY(-5px); // Handled by card hover or specific button hover
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); // Handled by card hover
+    opacity: 1;
+} */
 
 .btn::before {
     content: '';
@@ -28,20 +126,20 @@
     left: 100%;
 }
 
-/* Coming Soon Buttons */
-.btn-coming-soon {
+/* Original Coming Soon Buttons - can be removed if card style is preferred */
+/* .btn-coming-soon {
     background: linear-gradient(45deg, #6a0dad, #8e44ad);
     color: #fff;
     border: none;
     cursor: not-allowed;
-    opacity: 0.2; /* More transparent for "Coming Soon" buttons */
+    opacity: 0.2;
     transition: opacity 0.3s ease;
 }
 
 .btn-coming-soon:hover {
     transform: none;
     box-shadow: none;
-    opacity: 0.3; /* Slightly less transparent on hover */
+    opacity: 0.3;
 }
 
 .btn-coming-soon::after {
@@ -61,4 +159,4 @@
     50% {
         transform: scale(1.2) rotate(20deg);
     }
-}
+} */
