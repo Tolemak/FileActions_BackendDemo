@@ -1,0 +1,19 @@
+{% extends 'file/file_action.html.twig' %}
+
+{% block title_action %}404 Not Found{% endblock %}
+{% block breadcrumb_action %}404{% endblock %}
+
+{% block header %}404 - Page Not Found{% endblock %}
+
+{% block description %}
+    The page you are looking for does not exist or has been moved.<br>
+    <a href="/file-view/main" class="btn btn-primary mt-4">Back to Home</a>
+{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <i class="fas fa-exclamation-triangle fa-5x text-warning mb-4"></i>
+        <h2 class="mb-3">Oops! This page could not be found.</h2>
+        <p class="lead">It looks like nothing was found at this location.</p>
+    </div>
+{% endblock %}
