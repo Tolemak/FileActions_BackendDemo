@@ -44,15 +44,18 @@ wersje każdej akcji są dostępne pod `/file-view/*`.
 
 ## Uruchomienie
 
-**Docker/Podman** (dokładnie to, co jest w `container/`, PHP + Imagick już
+**Docker** (dokładnie to, co jest w `container/`, PHP + Imagick + Xdebug już
 zainstalowane):
 
 ```bash
 cd container
-docker-compose up -d   # albo podman-compose up -d
-composer install
-npm install && npm run build
+docker compose up -d --build
+docker compose exec web-server composer install
+npm install && npm run build   # na hoście — w kontenerze nie ma Node
 ```
+
+Aplikacja dostępna pod `http://localhost:40055`. Szczegóły konfiguracji
+Xdebug i inne informacje — w `container/README.md`.
 
 **Natywny PHP** — wymaga PHP 8.3+ z rozszerzeniem `imagick` i Composera:
 

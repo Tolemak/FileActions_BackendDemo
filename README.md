@@ -43,14 +43,17 @@ Browsable versions of each action live under `/file-view/*`.
 
 ## Running it
 
-**Docker/Podman** (matches `container/` exactly, PHP + Imagick preinstalled):
+**Docker** (matches `container/` exactly, PHP + Imagick + Xdebug preinstalled):
 
 ```bash
 cd container
-docker-compose up -d   # or podman-compose up -d
-composer install
-npm install && npm run build
+docker compose up -d --build
+docker compose exec web-server composer install
+npm install && npm run build   # on the host — no Node in the container
 ```
+
+App is served at `http://localhost:40055`. See `container/README.md` for
+Xdebug setup and other details.
 
 **Native PHP** — needs PHP 8.3+ with the `imagick` extension and Composer:
 

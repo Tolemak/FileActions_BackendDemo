@@ -1,14 +1,29 @@
-## Simple PHP container with Xdebug
-A simple container for PHP projects with Xdebug.
+## Dev container
 
-## Run command
-`docker-compose up -d` or `podman-compose up -d`
+PHP 8.3 + Apache + Imagick + Xdebug, for running this app locally without
+installing PHP natively.
+
+## Run
+
+```bash
+docker compose up -d --build
+```
+
+Then, from the repo root (not inside the container):
+
+```bash
+docker compose -f container/docker-compose.yml exec web-server composer install
+npm install && npm run build
+```
+
+App is served at `http://localhost:40055`.
 
 ## Notes
-- Current Xdebug version: 3.3.2 (2024-06-06),
-- HTTP server: Apache,
-- Set the IP address for the debugging computer (`xdebug.client_host`) in the `php/php.ini-development`,
-- If you want to change PHP version edit the `php/Dockerfile` (current PHP version: 8.3.7), 
-- If you want to change directory for PHP project change `volumes` value in `docker-compose.yml` file. 
-- To change default port (8080) edit the `docker-compose.yml` file.
-- To connect use address `localhost:8080`.
+
+- Xdebug listens on port 9000 with `xdebug.client_host=host.docker.internal`
+  — matches `.vscode/launch.json`'s "Listen for Xdebug" config out of the box.
+- To change the PHP version, edit `php/Dockerfile`'s `FROM` line.
+- To use a different host port, edit the `ports` mapping in `docker-compose.yml`.
+- Container mounts the whole repo at `/var/www/site`, so `var/cache`, `vendor/`
+  and `node_modules/` are shared with the host — keep host and container PHP
+  versions in sync if you also run the app natively.
