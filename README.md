@@ -1,91 +1,81 @@
-# FileActions_BackendDemo
+# File Actions Demo
 
-## About the Project
+*Read this in other languages: [Polski](README.pl.md)*
 
-FileActions_BackendDemo is a demonstration project showcasing a full-stack application with a primary focus on backend development using PHP and the Symfony framework. It highlights best practices, clean architecture, and integration with modern tools and technologies. The application, "File Actions Demo", allows users to perform various actions on files, such as resizing, converting, and compressing images.
+Symfony 7.2 / PHP 8.3 backend that runs Imagick-backed image operations
+(resize, format conversion, compression, rotation, sepia tone) behind a
+small REST API, with a Bootstrap + FilePond + TypeScript frontend on top.
+Built as a portfolio piece to show a clean, dependency-lean Symfony
+setup rather than a scaffold with every bundle switched on.
 
-### Key Features
+## Stack
 
-*   **Image Resizing:** Easily resize your images to specific dimensions or by a percentage.
-*   **Image Format Conversion:** Convert images between popular formats like PNG, JPG, and WEBP.
-*   **Image Compression:** Reduce image file sizes with adjustable quality settings to optimize for web or storage.
-*   **User-Friendly Interface:** Modern, intuitive interface with drag-and-drop file uploads powered by FilePond.
-*   **Real-time Feedback:** Clear notifications for successful operations or errors using SweetAlert2.
-*   **RESTful API:** Well-defined API endpoints for all file operations, enabling easy integration with other services or frontends.
+- **Backend**: Symfony 7.2, PHP 8.3, Imagick (`ext-imagick`)
+- **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5
+- **i18n**: `symfony/translation`, session-sticky locale switch (`en` / `pl`)
+- **Tests**: PHPUnit — unit tests on `FileService`, functional tests on every
+  controller (happy path + every validation branch) via `WebTestCase`
+- **Containers**: `container/` ships a PHP 8.3 + Apache + Xdebug image
+  (Podman/Docker Compose)
 
-### Technical Highlights
+Only what's actually used is installed: no Doctrine, no Security bundle,
+no Messenger/Mailer/Notifier, no asset-mapper/Stimulus — this app has no
+database, no auth, and no background jobs, so those would just be dead
+weight and attack surface.
 
-*   **Backend:** Symfony 6, PHP 8.x
-    *   RESTful API design.
-    *   Service-oriented architecture for modularity and maintainability.
-    *   Robust error handling and input validation.
-    *   Doctrine ORM for database interactions (if applicable in future extensions).
-*   **Frontend:** TypeScript, Twig, Vite, FilePond, SweetAlert2
-    *   Efficient asset management and fast development builds with Vite.
-    *   Twig templating for server-side rendering of initial views.
-    *   TypeScript for type-safe JavaScript development.
-    *   Interactive file uploads with FilePond.
-    *   User-friendly notifications with SweetAlert2.
-*   **Development & Deployment:**
-    *   Containerized environment using Podman/Docker Compose for consistent and easy setup (see `container/docker-compose.yml`).
-    *   PHPUnit for backend testing (setup available in `phpunit.xml.dist`).
-    *   Clear project structure following Symfony best practices.
+## Endpoints
 
-### Technologies Used
-*   **PHP 8.x** (Symfony 6 Framework)
-*   **Twig** (Templating Engine)
-*   **TypeScript** (Frontend Logic)
-*   **Vite** (Frontend Asset Management & Build Tool)
-*   **FilePond** (File Upload Library)
-*   **SweetAlert2** (Notification Library)
-*   **Podman / Docker Compose** (Containerization)
+All under `/file`, accept a single uploaded image (`jpeg`/`png`/`gif`,
+≤5MB) via `multipart/form-data`, return the processed file as a binary
+download:
 
-## Getting Started
+| Route | Method | Params |
+|---|---|---|
+| `/file/resize/{size}` | POST | `size`: 10–300 (% of original) |
+| `/file/convert/{extension}` | POST | `extension`: `jpeg`\|`png`\|`gif` |
+| `/file/compress/{ratio}` | POST | `ratio`: 1–100 (quality) |
+| `/file/rotate/{degrees}` | POST | `degrees`: 0–360 |
+| `/file/sepia/{intensity}` | POST | `intensity`: 1–100 |
 
-To get a local copy up and running, follow these simple steps.
+Errors come back as `400`/`500` with a translated plain-text body
+(honors `?_locale=pl`, sticky per session — see `LocaleSubscriber`).
+Browsable versions of each action live under `/file-view/*`.
 
-### Prerequisites
+## Running it
 
-*   Podman or Docker with Docker Compose installed.
-*   Git.
+**Docker/Podman** (matches `container/` exactly, PHP + Imagick preinstalled):
 
-### Installation & Running the Container
+```bash
+cd container
+docker-compose up -d   # or podman-compose up -d
+composer install
+npm install && npm run build
+```
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your_username/FileActions_BackendDemo.git
-    cd FileActions_BackendDemo
-    ```
-2.  **Navigate to the `container` directory:**
-    ```bash
-    cd container
-    ```
-3.  **Start the application using Podman Compose:**
-    ```bash
-    podman-compose up -d
-    ```
-    Alternatively, if you prefer Docker Compose, you can use:
-    ```bash
-    docker-compose up -d
-    ```
-4.  **Access the application:**
-    Open your browser and navigate to `http://localhost:40055` (as per your `docker-compose.yml`).
+**Native PHP** — needs PHP 8.3+ with the `imagick` extension and Composer:
 
-## Available Actions
+```bash
+composer install
+npm install && npm run build   # or `npm run dev` for a Vite dev server
+php -S 127.0.0.1:8000 -t public
+```
 
-Once the application is running, you can perform the following actions from the "File Actions Demo" main page:
+Copy `.env` to `.env.local` and set `APP_ENV=dev` for the profiler/toolbar
+and readable error pages; the checked-in `.env` defaults to `prod`.
 
-*   **Resize Images:** Go to the "Resize" section.
-*   **Convert Image Formats:** Go to the "Convert Extension" section.
-*   **Compress Images:** Go to the "Compress" section.
+## Tests
 
-## Purpose
+```bash
+php bin/phpunit
+```
 
-This project serves as a comprehensive demo to showcase backend development skills using Symfony, with a strong emphasis on clean code, modularity, and integration with modern frontend and development tools. It is designed for learning, experimentation, and demonstrating proficiency in building full-stack web applications.
+## Layout
 
-## Future Enhancements (Examples)
-
-*   Adding more image manipulation features (e.g., filters, cropping, watermarking).
-*   User authentication and authorization.
-*   Support for other file types (e.g., documents, videos).
-*   Implementing a job queue for long-running file processing tasks.
+- `src/Controller/FileController.php` — the API, one action per operation,
+  shared input validation in `checkTypicalIssues()`
+- `src/Service/FileService.php` — the actual Imagick calls, kept separate
+  from HTTP concerns so it's unit-testable without booting the kernel
+- `src/EventSubscriber/LocaleSubscriber.php` — reads `?_locale`, persists
+  it to the session, runs ahead of routing so it still applies on a 404
+- `translations/messages.{en,pl}.yaml` — every user-facing string, backend
+  error messages included

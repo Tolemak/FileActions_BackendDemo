@@ -1,0 +1,110 @@
+nav:
+    home: Strona główna
+    lang_pl: PL
+    lang_en: EN
+
+common:
+    cancel: Anuluj
+    cancelled_title: Anulowano
+    cancelled_text: Anulowano
+    back_home: Wróć na stronę główną
+    drop_label: "Przeciągnij i upuść obraz tutaj, albo <span class=\"filepond--label-action\">wybierz plik</span>"
+
+home:
+    title: File Actions Demo - Strona główna
+    heading: Witaj w File Actions Demo!
+    lead: "Twoje jedno miejsce do szybkiej i wygodnej obróbki plików. Zmieniaj rozmiar, format, kompresję i wiele więcej w kilka kliknięć!"
+    card:
+        resize:
+            title: Zmiana rozmiaru
+            text: Dopasuj wymiary obrazu do swoich potrzeb.
+            button: Przejdź do zmiany rozmiaru
+        convert:
+            title: Konwersja formatu
+            text: Zmień format między JPG, PNG, GIF itd.
+            button: Przejdź do konwersji
+        compress:
+            title: Kompresja plików
+            text: Zmniejsz rozmiar pliku bez utraty jakości.
+            button: Przejdź do kompresji
+        rotate:
+            title: Obrót obrazu
+            text: Obróć obraz o dowolny kąt.
+            button: Przejdź do obrotu
+        sepia:
+            title: Filtr sepia
+            text: Nadaj zdjęciom ciepły, retro odcień.
+            button: Przejdź do sepii
+        next:
+            title: Kolejna funkcja
+            text: Już wkrótce!
+            button: Niedostępne
+
+resize:
+    title: Zmiana rozmiaru obrazu
+    breadcrumb: Zmiana rozmiaru
+    header: Zmień rozmiar obrazu
+    description: Wgraj obraz i łatwo dopasuj jego rozmiar. Wybierz plik, a resztą zajmie się serwer!
+    button: Zmień rozmiar
+    prompt_title: Wybierz rozmiar?
+
+convert:
+    title: Konwersja formatu obrazu
+    breadcrumb: Konwersja
+    header: Konwertuj format obrazu
+    description: Wgraj obraz i bezproblemowo zmień jego format. Wybierz docelowy format poniżej.
+    target_format: Docelowy format
+    button: Konwertuj format
+
+compress:
+    title: Kompresja obrazu
+    breadcrumb: Kompresja
+    header: Skompresuj obraz
+    description: Wgraj obraz i zmniejsz jego rozmiar. Zoptymalizowane pod kątem jakości i wydajności.
+    button: Skompresuj obraz
+    prompt_title: Wybierz poziom kompresji?
+
+rotate:
+    title: Obrót obrazu
+    breadcrumb: Obrót
+    header: Obróć swój obraz
+    description: Wgraj obraz i obróć go o dowolny kąt od 0 do 360 stopni.
+    button: Obróć obraz
+    prompt_title: Wybierz kąt obrotu?
+
+sepia:
+    title: Filtr sepia
+    breadcrumb: Sepia
+    header: Zastosuj filtr sepia
+    description: Wgraj obraz i nadaj mu ciepły, retro odcień sepii.
+    button: Zastosuj filtr sepia
+    prompt_title: Wybierz intensywność sepii?
+
+error:
+    "404":
+        header: 404 - Nie znaleziono strony
+        description: Strona, której szukasz, nie istnieje lub została przeniesiona.
+        text: Ups! Nie znaleziono tej strony.
+        subtext: Wygląda na to, że pod tym adresem nic nie ma.
+    generic:
+        header: Coś poszło nie tak
+        description: Wystąpił nieoczekiwany błąd podczas przetwarzania żądania.
+        text: Ups! Coś poszło nie tak po naszej stronie.
+        subtext: Spróbuj ponownie za chwilę.
+    file_not_found: Nie znaleziono pliku
+    invalid_file_type: Plik musi być w formacie JPEG, PNG lub GIF
+    file_too_large: Rozmiar pliku musi być mniejszy niż 5MB
+    resize_invalid_size: Rozmiar musi być pomiędzy 10 a 300
+    resize_failed: "Błąd podczas zmiany rozmiaru pliku: %message%"
+    convert_invalid_extension: Format docelowy musi być jpeg, png lub gif
+    convert_failed: "Błąd podczas konwersji pliku: %message%"
+    compress_invalid_ratio: Poziom kompresji musi być pomiędzy 1 a 100
+    compress_failed: "Błąd podczas kompresji pliku: %message%"
+    rotate_invalid_degrees: Kąt obrotu musi być pomiędzy 0 a 360
+    rotate_failed: "Błąd podczas obracania pliku: %message%"
+    sepia_invalid_intensity: Intensywność musi być pomiędzy 1 a 100
+    sepia_failed: "Błąd podczas nakładania filtru sepia: %message%"
+
+js:
+    network_error_title: Błąd sieci
+    network_error_text: Nie udało się połączyć z serwerem. Sprawdź połączenie i spróbuj ponownie.

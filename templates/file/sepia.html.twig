@@ -1,0 +1,25 @@
+{% extends 'file/file_action.html.twig' %}
+
+{% block title_action %}{{ 'sepia.title'|trans }}{% endblock %}
+{% block breadcrumb_action %}{{ 'sepia.breadcrumb'|trans }}{% endblock %}
+
+{% block header %}{{ 'sepia.header'|trans }}{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }} {# Inherit stylesheets from base template #}
+	{{ vite_entry_link_tags('appsepia') }}
+{% endblock %}
+
+{% block javascripts_body %}
+	{{ parent() }}
+	{{ vite_entry_script_tags('appsepia') }}
+{% endblock %}
+
+{% block description %}{{ 'sepia.description'|trans }}{% endblock %}
+
+{% block content %}
+	<div class="text-center">
+		<input type="file" class="filepond mb-4" name="filepond" accept="image/png, image/jpeg, image/gif" data-prompt-title="{{ 'sepia.prompt_title'|trans }}" data-drop-label='{{ ('common.drop_label'|trans)|raw }}' style="--fp-accent-color: #dc3545"/>
+		<button class="btn btn-danger btn-lg rounded-pill px-5 shadow-sm button-process"><i class="fas fa-palette me-2"></i>{{ 'sepia.button'|trans }}</button>
+	</div>
+{% endblock %}

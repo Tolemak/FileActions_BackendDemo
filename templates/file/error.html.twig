@@ -1,0 +1,21 @@
+{% extends 'file/file_action.html.twig' %}
+
+{% set is_404 = status_code == 404 %}
+
+{% block title_action %}{{ (is_404 ? 'error.404.header' : 'error.generic.header')|trans }}{% endblock %}
+{% block breadcrumb_action %}{{ (is_404 ? 'error.404.header' : 'error.generic.header')|trans }}{% endblock %}
+
+{% block header %}{{ (is_404 ? 'error.404.header' : 'error.generic.header')|trans }}{% endblock %}
+
+{% block description %}
+	{{ (is_404 ? 'error.404.description' : 'error.generic.description')|trans }}<br>
+	<a href="{{ path('app_view_main') }}" class="btn btn-primary mt-4">{{ 'common.back_home'|trans }}</a>
+{% endblock %}
+
+{% block content %}
+	<div class="text-center">
+		<i class="fas fa-exclamation-triangle fa-5x text-warning mb-4"></i>
+		<h2 class="mb-3">{{ (is_404 ? 'error.404.text' : 'error.generic.text')|trans }}</h2>
+		<p class="lead">{{ (is_404 ? 'error.404.subtext' : 'error.generic.subtext')|trans }}</p>
+	</div>
+{% endblock %}

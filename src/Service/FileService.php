@@ -2,54 +2,83 @@
 
 namespace App\Service;
 
+use App\Enum\ExtensionToConvert;
 use Imagick;
+use ImagickPixel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-enum ExtensionToConvert: string
-{
-    case JPEG = 'jpeg';
-    case PNG = 'png';
-    case GIF = 'gif';
-}
-
 class FileService
 {
-    function __construct(private readonly Filesystem $filesystem)
+    public function __construct(private readonly Filesystem $filesystem)
     {
-        // Constructor code here
     }
 
-    function resize(UploadedFile $uploadedFile, int $size): string
+    public function resize(UploadedFile $uploadedFile, int $size): string
     {
         $sizePercentage = $size / 100;
         $temp = tempnam(sys_get_temp_dir(), $uploadedFile->getClientOriginalName());
         $this->filesystem->dumpFile($temp, $uploadedFile->getContent());
         $image = new Imagick($temp);
-        $image->scaleImage($image->getImageWidth() * $sizePercentage, $image->getImageHeight() * $sizePercentage);
+        $image->scaleImage(
+            (int) ($image->getImageWidth() * $sizePercentage),
+            (int) ($image->getImageHeight() * $sizePercentage)
+        );
         $image->setImageFormat($uploadedFile->getClientOriginalExtension());
         $image->writeImage($temp);
+        $image->destroy();
+
         return $temp;
     }
 
-    function changeExtension(UploadedFile $uploadedFile, ExtensionToConvert $extensionToConvert): string
+    public function changeExtension(UploadedFile $uploadedFile, ExtensionToConvert $extensionToConvert): string
     {
         $temp = tempnam(sys_get_temp_dir(), $extensionToConvert->value);
         $this->filesystem->dumpFile($temp, $uploadedFile->getContent());
         $image = new Imagick($temp);
         $image->setImageFormat($extensionToConvert->value);
         $image->writeImage($temp);
+        $image->destroy();
+
         return $temp;
     }
 
-    function compress(UploadedFile $uploadedFile, int $ratio): string
+    public function compress(UploadedFile $uploadedFile, int $ratio): string
     {
         $temp = tempnam(sys_get_temp_dir(), $uploadedFile->getClientOriginalName());
         $this->filesystem->dumpFile($temp, $uploadedFile->getContent());
         $image = new Imagick($temp);
-        $image->setImageCompression($ratio);
+        $image->setImageCompressionQuality($ratio);
         $image->setImageFormat($uploadedFile->getClientOriginalExtension());
         $image->writeImage($temp);
+        $image->destroy();
+
+        return $temp;
+    }
+
+    public function rotate(UploadedFile $uploadedFile, int $degrees): string
+    {
+        $temp = tempnam(sys_get_temp_dir(), $uploadedFile->getClientOriginalName());
+        $this->filesystem->dumpFile($temp, $uploadedFile->getContent());
+        $image = new Imagick($temp);
+        $image->rotateImage(new ImagickPixel('white'), $degrees);
+        $image->setImageFormat($uploadedFile->getClientOriginalExtension());
+        $image->writeImage($temp);
+        $image->destroy();
+
+        return $temp;
+    }
+
+    public function applySepiaTone(UploadedFile $uploadedFile, int $intensity): string
+    {
+        $temp = tempnam(sys_get_temp_dir(), $uploadedFile->getClientOriginalName());
+        $this->filesystem->dumpFile($temp, $uploadedFile->getContent());
+        $image = new Imagick($temp);
+        $image->sepiaToneImage($intensity / 100 * $image->getQuantumRange()['quantumRangeLong']);
+        $image->setImageFormat($uploadedFile->getClientOriginalExtension());
+        $image->writeImage($temp);
+        $image->destroy();
+
         return $temp;
     }
 }

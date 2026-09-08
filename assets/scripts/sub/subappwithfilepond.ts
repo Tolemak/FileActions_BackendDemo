@@ -21,8 +21,8 @@ export abstract class SubAppWithFilePond extends SubApp {
         this._filePond = FilePond.create(
             this._filePondElement,
             {
-                labelIdle: `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
-                stylePanelLayout: 'compact circle',
+                labelIdle: this._filePondElement.dataset.dropLabel
+                    ?? `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
                 styleLoadIndicatorPosition: 'center bottom',
                 styleProgressIndicatorPosition: 'right bottom',
                 styleButtonRemoveItemPosition: 'left bottom',
@@ -35,5 +35,5 @@ export abstract class SubAppWithFilePond extends SubApp {
         );
     }
 
-    abstract processFile(fieldName: string, file: File, _metadata, _load, _error, _progress, abort: () => void, _transfer, _options): Promise<void>;
+    abstract processFile(fieldName: string, file: File, _metadata, load: (uniqueFileId: string) => void, error: (errorText: string) => void, _progress, abort: () => void, _transfer, _options): Promise<void>;
 }

@@ -1,14 +1,19 @@
 <?php
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ErrorController extends AbstractController
 {
-    public function show(): Response
+    public function show(\Throwable $exception): Response
     {
-        // Symfony will pass the status code to the template automatically
-        return $this->render('file/404.html.twig', [], new Response('', 404));
+        $statusCode = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : 500;
+
+        return $this->render('file/error.html.twig', [
+            'status_code' => $statusCode,
+        ], new Response('', $statusCode));
     }
 }

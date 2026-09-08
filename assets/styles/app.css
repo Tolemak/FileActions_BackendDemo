@@ -1,33 +1,58 @@
+/*
+ * Shared across every page: a subtle entrance animation plus native
+ * cross-document view transitions (Chromium browsers) for a smooth
+ * fade/slide between pages instead of a hard page-flash. Both degrade
+ * silently where unsupported, and both back off for reduced-motion.
+ */
+
+@view-transition {
+    navigation: auto;
+}
+
+@keyframes page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 body {
-    background-color: skyblue;
+    animation: page-enter 0.35s ease-out both;
+}
 
-    /* Nested selectors: 
-    This demonstrates the use of hierarchical (nested) CSS. 
-    The .list-layout class is scoped within the body tag. */
-    .list-layout {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2vh;
+::view-transition-old(root) {
+    animation: 180ms ease-in both view-transition-leave;
+}
+
+::view-transition-new(root) {
+    animation: 320ms ease-out both view-transition-enter;
+}
+
+@keyframes view-transition-leave {
+    to {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes view-transition-enter {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body {
+        animation: none;
     }
 
-    .main-grid {
-        display: grid;
-        /* This grid layout is responsive, using auto-fill to adjust the number of columns 
-        based on the available space, with a minimum column width of 500px. */
-        grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-        gap: 2vh;
-        margin: 5vh;
-    }
-
-    .main-grid-subpage {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 2vh;
-        margin: 5vh;
-    }
-
-    .button-back {
-        width: 30%;
-        height: 20%;
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none;
     }
 }

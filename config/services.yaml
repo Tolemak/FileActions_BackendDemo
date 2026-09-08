@@ -16,10 +16,13 @@ services:
     App\:
         resource: '../src/'
         exclude:
-            - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Utils.php'
+
+    App\EventSubscriber\LocaleSubscriber:
+        arguments:
+            $defaultLocale: '%kernel.default_locale%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
