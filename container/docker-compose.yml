@@ -1,10 +1,8 @@
-version: "3.7"
 services:
   web-server:
     build:
       context: ./php
-    image: localhost/php-web-server:latest
-    restart: always
+    restart: unless-stopped
     volumes:
       - ..:/var/www/site:z
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf:z
