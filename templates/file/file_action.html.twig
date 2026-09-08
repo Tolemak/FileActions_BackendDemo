@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale }}">
 	<head>
 		<meta charset="UTF-8">
 		<title>
@@ -12,13 +12,21 @@
 		{% endblock %}
 		{% block javascripts_head %}{% endblock %}
 	</head>
-	<body class="bg-light py-5">
+	<body
+		class="bg-light py-5"
+		data-i18n-cancel="{{ 'common.cancel'|trans }}"
+		data-i18n-cancelled-title="{{ 'common.cancelled_title'|trans }}"
+		data-i18n-cancelled-text="{{ 'common.cancelled_text'|trans }}"
+		data-i18n-network-error-title="{{ 'js.network_error_title'|trans }}"
+		data-i18n-network-error-text="{{ 'js.network_error_text'|trans }}"
+	>
 		<div class="container">
-			<nav aria-label="breadcrumb" class="mb-4">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="{{ path('app_filefile_view_main') }}"><i class="fas fa-home"></i> Home</a></li>
+			<nav aria-label="breadcrumb" class="mb-4 d-flex justify-content-between align-items-center">
+				<ol class="breadcrumb mb-0">
+					<li class="breadcrumb-item"><a href="{{ path('app_view_main') }}"><i class="fas fa-home"></i> {{ 'nav.home'|trans }}</a></li>
 					<li class="breadcrumb-item active" aria-current="page">{% block breadcrumb_action %}Action{% endblock %}</li>
 				</ol>
+				{% include 'file/_locale_switcher.html.twig' %}
 			</nav>
 
 			<div class="text-center">
@@ -26,8 +34,7 @@
 					{% block header %}File Action{% endblock %}
 				</h1>
 				<p class="lead text-muted col-md-8 mx-auto mb-5">
-					{% block description %}Perform an action on your file.
-					{% endblock %}
+					{% block description %}{% endblock %}
 				</p>
 			</div>
 			<div class="card shadow-lg p-4 p-md-5"> 

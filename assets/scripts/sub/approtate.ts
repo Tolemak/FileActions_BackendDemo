@@ -6,30 +6,30 @@ import { getTranslations, processFileAction, saveBlobAsFile } from '../utils.js'
 import { SubAppWithFilePond } from './subappwithfilepond.js';
 
 
-class CompressApp extends SubAppWithFilePond {
+class RotateApp extends SubAppWithFilePond {
     constructor() {
         super(document.querySelector('input.filepond') as HTMLInputElement);
     }
 
-    async sweetChooseCompress() {
+    async sweetChooseDegrees() {
         const { cancel } = getTranslations();
         return await Swal.fire({
             title: this._filePondElement.dataset.promptTitle,
             icon: "question",
             input: "range",
             inputAttributes: {
-                min: "1",
-                max: "100",
-                step: "1"
+                min: "0",
+                max: "360",
+                step: "5"
             },
-            inputValue: 50,
+            inputValue: 90,
             showCancelButton: true,
             cancelButtonText: cancel,
         });
     }
 
     async processFile(fieldName: string, file: File, _metadata, load, error, _progress, abort, _transfer, _options): Promise<void> {
-        const ret = await this.sweetChooseCompress();
+        const ret = await this.sweetChooseDegrees();
         if (ret.isDismissed) {
             abort();
             const { cancelledTitle, cancelledText } = getTranslations();
@@ -37,7 +37,7 @@ class CompressApp extends SubAppWithFilePond {
             return;
         }
 
-        const blob = await processFileAction(`/file/compress/${ret.value}`, fieldName, file, load, error);
+        const blob = await processFileAction(`/file/rotate/${ret.value}`, fieldName, file, load, error);
         this._filePond.removeFiles();
         if (blob) {
             saveBlobAsFile(blob, file);
@@ -46,4 +46,4 @@ class CompressApp extends SubAppWithFilePond {
 
 }
 
-new CompressApp();
+new RotateApp();

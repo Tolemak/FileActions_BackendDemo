@@ -23,6 +23,33 @@ body {
     border: none; /* Remove default card border */
     border-radius: 15px; /* More rounded corners */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    animation: card-enter 0.45s ease-out forwards;
+}
+
+@keyframes card-enter {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.row > div:nth-child(1) .action-card { animation-delay: 0.05s; }
+.row > div:nth-child(2) .action-card { animation-delay: 0.1s; }
+.row > div:nth-child(3) .action-card { animation-delay: 0.15s; }
+.row > div:nth-child(4) .action-card { animation-delay: 0.2s; }
+.row > div:nth-child(5) .action-card { animation-delay: 0.25s; }
+.row > div:nth-child(6) .action-card { animation-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .action-card {
+        opacity: 1;
+        animation: none;
+    }
 }
 
 .action-card:hover {
@@ -104,11 +131,6 @@ body {
     /* opacity: 0.9; */ /* Let card opacity handle this or set to 1 */
 }
 
-/* .btn:hover {
-    transform: translateY(-5px); // Handled by card hover or specific button hover
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); // Handled by card hover
-    opacity: 1;
-} */
 
 .btn::before {
     content: '';
@@ -125,38 +147,3 @@ body {
 .btn:hover::before {
     left: 100%;
 }
-
-/* Original Coming Soon Buttons - can be removed if card style is preferred */
-/* .btn-coming-soon {
-    background: linear-gradient(45deg, #6a0dad, #8e44ad);
-    color: #fff;
-    border: none;
-    cursor: not-allowed;
-    opacity: 0.2;
-    transition: opacity 0.3s ease;
-}
-
-.btn-coming-soon:hover {
-    transform: none;
-    box-shadow: none;
-    opacity: 0.3;
-}
-
-.btn-coming-soon::after {
-    content: '✨';
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    font-size: 1.5rem;
-    animation: sparkle 1.5s infinite ease-in-out;
-}
-
-@keyframes sparkle {
-    0%, 100% {
-        transform: scale(1) rotate(0deg);
-    }
-
-    50% {
-        transform: scale(1.2) rotate(20deg);
-    }
-} */

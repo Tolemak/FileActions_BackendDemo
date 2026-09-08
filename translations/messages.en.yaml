@@ -1,0 +1,110 @@
+nav:
+    home: Home
+    lang_pl: PL
+    lang_en: EN
+
+common:
+    cancel: Cancel
+    cancelled_title: Cancelled
+    cancelled_text: Cancelled
+    back_home: Back to Home
+    drop_label: "Drag & drop your image here, or <span class=\"filepond--label-action\">browse</span>"
+
+home:
+    title: File Actions Demo - Main Page
+    heading: Welcome to File Actions Demo!
+    lead: "Your one-stop solution for quick and easy file manipulations. Resize, convert, compress, and more with just a few clicks. Let's get started!"
+    card:
+        resize:
+            title: Resize Images
+            text: Adjust dimensions to fit your needs.
+            button: Go to Resize
+        convert:
+            title: Convert Formats
+            text: Switch between JPG, PNG, GIF, etc.
+            button: Go to Convert
+        compress:
+            title: Compress Files
+            text: Reduce file size without losing quality.
+            button: Go to Compress
+        rotate:
+            title: Rotate Image
+            text: Spin your image to any angle.
+            button: Go to Rotate
+        sepia:
+            title: Sepia Filter
+            text: Give your photos a warm, vintage tone.
+            button: Go to Sepia
+        next:
+            title: Next Awesome Feature
+            text: Stay Tuned!
+            button: Unavailable
+
+resize:
+    title: Resize Image
+    breadcrumb: Resize
+    header: Resize Your Image
+    description: Upload an image and adjust its size with ease. Select your image, and the server will handle the rest!
+    button: Resize Image
+    prompt_title: Choose size?
+
+convert:
+    title: Convert Image Format
+    breadcrumb: Convert
+    header: Convert Image Format
+    description: Upload an image and convert its format effortlessly. Choose the desired output format below.
+    target_format: Target Format
+    button: Convert Format
+
+compress:
+    title: Compress Image
+    breadcrumb: Compress
+    header: Compress Your Image
+    description: Upload an image and reduce its size. Optimized for quality and performance.
+    button: Compress Image
+    prompt_title: Choose compression level?
+
+rotate:
+    title: Rotate Image
+    breadcrumb: Rotate
+    header: Rotate Your Image
+    description: Upload an image and rotate it by any angle between 0 and 360 degrees.
+    button: Rotate Image
+    prompt_title: Choose rotation angle?
+
+sepia:
+    title: Sepia Filter
+    breadcrumb: Sepia
+    header: Apply a Sepia Filter
+    description: Upload an image and give it a warm, vintage sepia tone.
+    button: Apply Sepia Filter
+    prompt_title: Choose sepia intensity?
+
+error:
+    "404":
+        header: 404 - Page Not Found
+        description: The page you are looking for does not exist or has been moved.
+        text: Oops! This page could not be found.
+        subtext: It looks like nothing was found at this location.
+    generic:
+        header: Something Went Wrong
+        description: An unexpected error occurred while processing your request.
+        text: "Oops! Something went wrong on our end."
+        subtext: Please try again in a moment.
+    file_not_found: File not found
+    invalid_file_type: File must be a JPEG, PNG or GIF
+    file_too_large: File size must be less than 5MB
+    resize_invalid_size: Size must be between 10 and 300
+    resize_failed: "Error resizing file: %message%"
+    convert_invalid_extension: Extension must be jpeg, png or gif
+    convert_failed: "Error converting file: %message%"
+    compress_invalid_ratio: Compress ratio must be between 1 and 100
+    compress_failed: "Error compressing file: %message%"
+    rotate_invalid_degrees: Degrees must be between 0 and 360
+    rotate_failed: "Error rotating file: %message%"
+    sepia_invalid_intensity: Intensity must be between 1 and 100
+    sepia_failed: "Error applying sepia tone: %message%"
+
+js:
+    network_error_title: Network Error
+    network_error_text: Could not reach the server. Please check your connection and try again.

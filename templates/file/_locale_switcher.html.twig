@@ -1,0 +1,6 @@
+{% set current_path = app.request.pathInfo %}
+<div class="lang-switcher small">
+	<a href="{{ current_path }}?_locale=en" class="{{ app.request.locale == 'en' ? 'fw-bold text-primary' : 'text-muted' }}">{{ 'nav.lang_en'|trans }}</a>
+	<span class="text-muted">/</span>
+	<a href="{{ current_path }}?_locale=pl" class="{{ app.request.locale == 'pl' ? 'fw-bold text-primary' : 'text-muted' }}">{{ 'nav.lang_pl'|trans }}</a>
+</div>
