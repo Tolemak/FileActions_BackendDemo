@@ -1,3 +1,5 @@
+name: fileactions
+
 services:
   web-server:
     build:
