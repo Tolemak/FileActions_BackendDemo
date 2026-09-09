@@ -6,7 +6,7 @@
 {% block header %}{{ 'sepia.header'|trans }}{% endblock %}
 
 {% block stylesheets %}
-	{{ parent() }} {# Inherit stylesheets from base template #}
+	{{ parent() }}
 	{{ vite_entry_link_tags('appsepia') }}
 {% endblock %}
 
