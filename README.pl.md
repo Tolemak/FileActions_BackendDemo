@@ -5,9 +5,7 @@
 Backend Symfony 7.2 / PHP 8.3 wykonujący operacje na obrazach oparte na
 Imagick (zmiana rozmiaru, konwersja formatu, kompresja, obrót, filtr
 sepia) udostępnione jako niewielkie REST API, plus frontend na bazie
-Bootstrap + FilePond + TypeScript. Projekt portfolio, którego celem jest
-pokazanie czystego, oszczędnego w zależnościach setupu Symfony, a nie
-scaffoldu z włączonymi wszystkimi bundlami po kolei.
+Bootstrap + FilePond + TypeScript.
 
 ## Stack
 

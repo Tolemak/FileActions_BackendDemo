@@ -5,8 +5,6 @@
 Symfony 7.2 / PHP 8.3 backend that runs Imagick-backed image operations
 (resize, format conversion, compression, rotation, sepia tone) behind a
 small REST API, with a Bootstrap + FilePond + TypeScript frontend on top.
-Built as a portfolio piece to show a clean, dependency-lean Symfony
-setup rather than a scaffold with every bundle switched on.
 
 ## Stack
 
