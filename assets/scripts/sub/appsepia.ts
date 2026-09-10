@@ -3,7 +3,7 @@ import "../app.js";
 import '../../styles/resize.css';
 import Swal from 'sweetalert2';
 import { getTranslations, processFileAction, saveBlobAsFile } from '../utils.js';
-import { SubAppWithFilePond } from './subappwithfilepond.js';
+import { SubAppWithFilePond, type ProcessArgs } from './subappwithfilepond.js';
 
 
 class SepiaApp extends SubAppWithFilePond {
@@ -28,7 +28,15 @@ class SepiaApp extends SubAppWithFilePond {
         });
     }
 
-    async processFile(fieldName: string, file: File, _metadata, load, error, _progress, abort, _transfer, _options): Promise<void> {
+    async processFile(
+        fieldName: ProcessArgs[0],
+        file: ProcessArgs[1],
+        _metadata: ProcessArgs[2],
+        load: ProcessArgs[3],
+        error: ProcessArgs[4],
+        _progress: ProcessArgs[5],
+        abort: ProcessArgs[6],
+    ): Promise<void> {
         const ret = await this.sweetChooseIntensity();
         if (ret.isDismissed) {
             abort();

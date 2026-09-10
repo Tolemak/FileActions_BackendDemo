@@ -2,7 +2,7 @@ import 'filepond/dist/filepond.min.css';
 import "../app.js";
 import '../../styles/resize.css';
 import { processFileAction, saveBlobAsFile } from '../utils.js';
-import { SubAppWithFilePond } from './subappwithfilepond.js';
+import { SubAppWithFilePond, type ProcessArgs } from './subappwithfilepond.js';
 
 
 class ConvertApp extends SubAppWithFilePond {
@@ -13,7 +13,15 @@ class ConvertApp extends SubAppWithFilePond {
         this._extensionSelectElement = document.querySelector("#dest-extension") as HTMLSelectElement;
     }
 
-    async processFile(fieldName: string, file: File, _metadata, load, error, _progress, abort, _transfer, _options): Promise<void> {
+    async processFile(
+        fieldName: ProcessArgs[0],
+        file: ProcessArgs[1],
+        _metadata: ProcessArgs[2],
+        load: ProcessArgs[3],
+        error: ProcessArgs[4],
+        _progress: ProcessArgs[5],
+        _abort: ProcessArgs[6],
+    ): Promise<void> {
         const destExtension = this._extensionSelectElement.value;
 
         const blob = await processFileAction(`/file/convert/${destExtension}`, fieldName, file, load, error);

@@ -17,6 +17,9 @@ class FileViewControllerTest extends WebTestCase
         $this->assertSame(200, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * @return iterable<string, array{string}>
+     */
     public static function viewRouteProvider(): iterable
     {
         yield 'main' => ['/file-view/main'];
@@ -51,7 +54,7 @@ class FileViewControllerTest extends WebTestCase
         $client->request('GET', '/this-route-does-not-exist');
 
         $this->assertSame(404, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('404', $client->getResponse()->getContent());
+        $this->assertStringContainsString('404', (string) $client->getResponse()->getContent());
     }
 
     public function testLocaleSwitcherPersistsAcrossRequests(): void
@@ -74,6 +77,6 @@ class FileViewControllerTest extends WebTestCase
         $client->request('GET', '/this-route-does-not-exist');
 
         $this->assertSame(404, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Nie znaleziono strony', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Nie znaleziono strony', (string) $client->getResponse()->getContent());
     }
 }

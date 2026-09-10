@@ -3,8 +3,8 @@ when@dev:
         toolbar: true
 
     framework:
-        profiler: { only_exceptions: false }
+        profiler: { only_exceptions: false, collect_serializer_data: true }
 
 when@test:
     framework:
-        profiler: { collect: false }
+        profiler: { collect: false, collect_serializer_data: true }

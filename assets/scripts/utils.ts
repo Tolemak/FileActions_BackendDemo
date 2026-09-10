@@ -1,6 +1,9 @@
 import Swal from 'sweetalert2';
 
-export function saveBlobAsFile(blob: Blob, file: File): void {
+/** Matches both a native File and FilePond's looser ActualFileObject. */
+export type NamedBlob = Blob & { readonly name: string };
+
+export function saveBlobAsFile(blob: Blob, file: NamedBlob): void {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -48,7 +51,7 @@ export function getTranslations(): Translations {
 export async function processFileAction(
     url: string,
     fieldName: string,
-    file: File,
+    file: NamedBlob,
     load: (uniqueFileId: string) => void,
     error: (errorText: string) => void,
 ): Promise<Blob | null> {

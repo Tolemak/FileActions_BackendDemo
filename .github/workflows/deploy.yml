@@ -22,15 +22,24 @@ jobs:
         with:
           php-version: '8.3'
           extensions: imagick, zip, ctype, iconv
-          coverage: none
+          coverage: pcov
 
       - name: Install PHP dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Run tests
-        run: vendor/bin/phpunit
+      - name: Audit dependencies
+        run: composer audit
+
+      - name: Static analysis
+        run: vendor/bin/phpstan analyse --no-progress
+
+      - name: Run tests with coverage
+        run: vendor/bin/phpunit --coverage-clover var/coverage/clover.xml
         env:
           APP_ENV: test
+
+      - name: Enforce coverage threshold
+        run: php bin/check-coverage.php var/coverage/clover.xml 80
 
       - uses: actions/setup-node@v4
         with:
@@ -38,6 +47,9 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
+      - name: Type-check frontend
+        run: npm run typecheck
+
       - name: Verify frontend build
         run: npm run build
 
