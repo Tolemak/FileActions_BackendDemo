@@ -24,4 +24,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Denies every coder but JPEG/PNG/GIF and all delegates, which is what closes
+# the ImageTragick family (MSL/MVG/SVG/URL fetch) rather than relying on the
+# upload check alone.
+COPY imagemagick-policy.xml /etc/ImageMagick-7/policy.xml
+
 WORKDIR /var/www/site

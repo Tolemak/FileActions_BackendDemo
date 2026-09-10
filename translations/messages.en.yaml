@@ -95,16 +95,17 @@ error:
     file_not_found: File not found
     invalid_file_type: File must be a JPEG, PNG or GIF
     file_too_large: File size must be less than 5MB
+    image_too_large: Image dimensions are too large to process
     resize_invalid_size: Size must be between 10 and 300
-    resize_failed: "Error resizing file: %message%"
+    resize_failed: Could not resize the file. Please try again.
     convert_invalid_extension: Extension must be jpeg, png or gif
-    convert_failed: "Error converting file: %message%"
+    convert_failed: Could not convert the file. Please try again.
     compress_invalid_ratio: Compress ratio must be between 1 and 100
-    compress_failed: "Error compressing file: %message%"
+    compress_failed: Could not compress the file. Please try again.
     rotate_invalid_degrees: Degrees must be between 0 and 360
-    rotate_failed: "Error rotating file: %message%"
+    rotate_failed: Could not rotate the file. Please try again.
     sepia_invalid_intensity: Intensity must be between 1 and 100
-    sepia_failed: "Error applying sepia tone: %message%"
+    sepia_failed: Could not apply the sepia filter. Please try again.
 
 js:
     network_error_title: Network Error
