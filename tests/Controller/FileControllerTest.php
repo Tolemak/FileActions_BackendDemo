@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileControllerTest extends WebTestCase
 {
+    /** @var list<string> */
     private array $tempFiles = [];
 
     protected function tearDown(): void
@@ -39,7 +40,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/resize/50');
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('File not found', $client->getResponse()->getContent());
+        $this->assertStringContainsString('File not found', (string) $client->getResponse()->getContent());
     }
 
     public function testResizeRejectsUnsupportedMimeType(): void
@@ -53,7 +54,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/resize/50', [], ['file' => $file]);
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('must be a JPEG, PNG or GIF', $client->getResponse()->getContent());
+        $this->assertStringContainsString('must be a JPEG, PNG or GIF', (string) $client->getResponse()->getContent());
     }
 
     public function testResizeRejectsFileDisguisedAsImage(): void
@@ -67,7 +68,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/resize/50', [], ['file' => $file]);
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('must be a JPEG, PNG or GIF', $client->getResponse()->getContent());
+        $this->assertStringContainsString('must be a JPEG, PNG or GIF', (string) $client->getResponse()->getContent());
     }
 
     public function testResizeRejectsUndecodableImageAsClientError(): void
@@ -81,7 +82,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/resize/50', [], ['file' => $file]);
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('must be a JPEG, PNG or GIF', $client->getResponse()->getContent());
+        $this->assertStringContainsString('must be a JPEG, PNG or GIF', (string) $client->getResponse()->getContent());
     }
 
     /**
@@ -107,7 +108,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/resize/500', [], ['file' => $file]);
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Size must be between 10 and 300', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Size must be between 10 and 300', (string) $client->getResponse()->getContent());
     }
 
     public function testResizeReturnsResizedImage(): void
@@ -121,7 +122,7 @@ class FileControllerTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame('image/png', $response->headers->get('Content-Type'));
-        $this->assertStringContainsString('sample.png', $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('sample.png', (string) $response->headers->get('Content-Disposition'));
     }
 
     public function testConvertRejectsUnknownExtension(): void
@@ -132,7 +133,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/convert/bmp', [], ['file' => $file]);
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Extension must be jpeg, png or gif', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Extension must be jpeg, png or gif', (string) $client->getResponse()->getContent());
     }
 
     public function testConvertReturnsConvertedImage(): void
@@ -145,7 +146,7 @@ class FileControllerTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('image/jpeg', $response->headers->get('Content-Type'));
-        $this->assertStringContainsString('sample.jpeg', $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('sample.jpeg', (string) $response->headers->get('Content-Disposition'));
     }
 
     public function testCompressRejectsRatioOutsideAllowedRange(): void
@@ -156,7 +157,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/compress/0', [], ['file' => $file]);
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Compress ratio must be between 1 and 100', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Compress ratio must be between 1 and 100', (string) $client->getResponse()->getContent());
     }
 
     public function testCompressReturnsCompressedImage(): void
@@ -179,7 +180,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/rotate/500', [], ['file' => $file]);
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Degrees must be between 0 and 360', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Degrees must be between 0 and 360', (string) $client->getResponse()->getContent());
     }
 
     public function testRotateReturnsRotatedImage(): void
@@ -191,7 +192,7 @@ class FileControllerTest extends WebTestCase
 
         $response = $client->getResponse();
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringContainsString('sample.png', $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('sample.png', (string) $response->headers->get('Content-Disposition'));
     }
 
     public function testSepiaRejectsIntensityOutsideAllowedRange(): void
@@ -202,7 +203,7 @@ class FileControllerTest extends WebTestCase
         $client->request('POST', '/file/sepia/0', [], ['file' => $file]);
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Intensity must be between 1 and 100', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Intensity must be between 1 and 100', (string) $client->getResponse()->getContent());
     }
 
     public function testSepiaReturnsProcessedImage(): void

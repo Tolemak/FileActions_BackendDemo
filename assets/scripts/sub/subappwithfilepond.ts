@@ -1,24 +1,27 @@
 import * as FilePond from 'filepond';
 import { SubApp } from "./subapp";
 
+export type ProcessArgs = Parameters<FilePond.ProcessServerConfigFunction>;
+
 export abstract class SubAppWithFilePond extends SubApp {
-    protected _filePondElement: HTMLInputElement;
-    protected _filePond: FilePond.FilePond;
+    protected readonly _filePondElement: HTMLInputElement;
+    protected readonly _filePond: FilePond.FilePond;
 
     constructor(filePondElement: HTMLInputElement) {
         super();
         this._filePondElement = filePondElement;
-        this.initFilePond();
+        this._filePond = this.createFilePond();
+        this.setupEventListeners();
     }
-    setupEventListeners() {
+
+    setupEventListeners(): void {
         document.querySelector(".button-process")?.addEventListener("click", () => {
             this._filePond.processFiles();
         });
-
     }
 
-    initFilePond() {
-        this._filePond = FilePond.create(
+    private createFilePond(): FilePond.FilePond {
+        return FilePond.create(
             this._filePondElement,
             {
                 labelIdle: this._filePondElement.dataset.dropLabel
@@ -35,5 +38,5 @@ export abstract class SubAppWithFilePond extends SubApp {
         );
     }
 
-    abstract processFile(fieldName: string, file: File, _metadata, load: (uniqueFileId: string) => void, error: (errorText: string) => void, _progress, abort: () => void, _transfer, _options): Promise<void>;
+    abstract processFile(...args: ProcessArgs): Promise<void>;
 }

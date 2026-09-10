@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class FileServiceTest extends TestCase
 {
     private FileService $fileService;
+    /** @var list<string> */
     private array $tempFiles = [];
 
     protected function setUp(): void

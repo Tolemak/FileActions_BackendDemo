@@ -86,7 +86,12 @@ class FileService
             $image = new Imagick();
 
             try {
-                $image->readImage($temp);
+                try {
+                    $image->readImage($temp);
+                } catch (\ImagickException $e) {
+                    throw new InvalidImageException('Image could not be decoded.', previous: $e);
+                }
+
                 $operation($image);
                 $image->writeImage($temp);
             } finally {
