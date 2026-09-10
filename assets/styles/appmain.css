@@ -1,7 +1,11 @@
 /* General Body and Container Styling */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa; /* Softer background */
+    background-color: var(--bs-tertiary-bg); /* Softer than the plain body bg, follows the theme */
+}
+
+.theme-toggle-btn {
+    line-height: 1;
 }
 
 .container {
@@ -10,12 +14,12 @@ body {
 
 /* Headings and Text */
 .display-3 {
-    color: #0056b3; /* Darker primary color for heading */
+    color: var(--bs-primary);
 }
 
 .lead {
     font-size: 1.15rem;
-    color: #5a6268; /* Slightly darker muted text */
+    color: var(--bs-secondary-color);
 }
 
 /* Action Card Styling */
@@ -108,7 +112,7 @@ body {
 /* Coming Soon Card Styling */
 .card-coming-soon {
     opacity: 0.7;
-    background-color: #e9ecef; /* Lighter background for disabled cards */
+    background-color: var(--bs-secondary-bg);
 }
 
 .card-coming-soon .action-icon i {

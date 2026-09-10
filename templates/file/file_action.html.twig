@@ -6,6 +6,15 @@
 			File Actions Demo - {% block title_action %}File Action{% endblock %}
 		</title>
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🛠️</text></svg>">
+		<script>
+			(function () {
+				var stored = localStorage.getItem('theme');
+				var theme = (stored === 'light' || stored === 'dark')
+					? stored
+					: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				document.documentElement.setAttribute('data-bs-theme', theme);
+			})();
+		</script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 		{% block stylesheets %}
 			{{ vite_entry_link_tags('appmain') }}
@@ -13,7 +22,7 @@
 		{% block javascripts_head %}{% endblock %}
 	</head>
 	<body
-		class="bg-light py-5"
+		class="py-5"
 		data-i18n-cancel="{{ 'common.cancel'|trans }}"
 		data-i18n-cancelled-title="{{ 'common.cancelled_title'|trans }}"
 		data-i18n-cancelled-text="{{ 'common.cancelled_text'|trans }}"
@@ -26,7 +35,10 @@
 					<li class="breadcrumb-item"><a href="{{ path('app_view_main') }}"><i class="fas fa-home"></i> {{ 'nav.home'|trans }}</a></li>
 					<li class="breadcrumb-item active" aria-current="page">{% block breadcrumb_action %}Action{% endblock %}</li>
 				</ol>
-				{% include 'file/_locale_switcher.html.twig' %}
+				<div class="d-flex align-items-center gap-3">
+					{% include 'file/_theme_toggle.html.twig' %}
+					{% include 'file/_locale_switcher.html.twig' %}
+				</div>
 			</nav>
 
 			<div class="text-center">

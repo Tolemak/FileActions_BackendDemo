@@ -2,6 +2,7 @@ nav:
     home: Home
     lang_pl: PL
     lang_en: EN
+    toggle_theme: Toggle dark/light mode
 
 common:
     cancel: Cancel

@@ -2,6 +2,15 @@
 <html lang="{{ app.request.locale }}">
 	<head>
 		<meta charset="UTF-8">
+		<script>
+			(function () {
+				var stored = localStorage.getItem('theme');
+				var theme = (stored === 'light' || stored === 'dark')
+					? stored
+					: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				document.documentElement.setAttribute('data-bs-theme', theme);
+			})();
+		</script>
 		<title>
 			{% block title %}{{ 'home.title'|trans }}{% endblock %}
 		</title>
@@ -15,10 +24,11 @@
 			{{ vite_entry_script_tags('appmain') }}
 		{% endblock %}
 	</head>
-	<body class="bg-light text-center py-5">
+	<body class="text-center py-5">
 		{% block body %}
 			<div class="container">
-				<div class="d-flex justify-content-end mb-2">
+				<div class="d-flex justify-content-end align-items-center gap-3 mb-2">
+					{% include 'file/_theme_toggle.html.twig' %}
 					{% include 'file/_locale_switcher.html.twig' %}
 				</div>
 				<header class="mb-5">

@@ -58,3 +58,31 @@
     color: var(--fp-accent-color, #0d6efd);
     transform: translateY(-4px);
 }
+
+/* Dark theme: the dropzone is a light-tinted panel by design, so it needs
+   its own dark palette rather than inheriting Bootstrap's body variables. */
+[data-bs-theme='dark'] .filepond--panel-root {
+    background-color: #262b33;
+    border-color: #495057;
+}
+
+[data-bs-theme='dark'] .filepond--drop-label {
+    color: #ced4da;
+}
+
+[data-bs-theme='dark'] .filepond--drop-label::before {
+    color: #6c757d;
+}
+
+[data-bs-theme='dark'] .filepond--label-action {
+    text-decoration-color: #adb5bd;
+}
+
+[data-bs-theme='dark'] .filepond--root:hover .filepond--panel-root {
+    border-color: #6c757d;
+    background-color: #2e343d;
+}
+
+[data-bs-theme='dark'] .filepond--hopper[data-hopper-state='drag-over'] .filepond--panel-root {
+    background-color: #1f2b3d;
+}
