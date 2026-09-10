@@ -56,6 +56,49 @@ class FileControllerTest extends WebTestCase
         $this->assertStringContainsString('must be a JPEG, PNG or GIF', $client->getResponse()->getContent());
     }
 
+    public function testResizeRejectsFileDisguisedAsImage(): void
+    {
+        $path = tempnam(sys_get_temp_dir(), 'fixture') . '.png';
+        file_put_contents($path, '<svg xmlns="http://www.w3.org/2000/svg"><image href="/etc/passwd"/></svg>');
+        $this->tempFiles[] = $path;
+        $file = new UploadedFile($path, 'sample.png', 'image/png', null, true);
+
+        $client = static::createClient();
+        $client->request('POST', '/file/resize/50', [], ['file' => $file]);
+
+        $this->assertSame(400, $client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('must be a JPEG, PNG or GIF', $client->getResponse()->getContent());
+    }
+
+    public function testResizeRejectsUndecodableImageAsClientError(): void
+    {
+        $path = tempnam(sys_get_temp_dir(), 'fixture') . '.png';
+        file_put_contents($path, $this->createPngHeaderOnly(64, 64));
+        $this->tempFiles[] = $path;
+        $file = new UploadedFile($path, 'sample.png', 'image/png', null, true);
+
+        $client = static::createClient();
+        $client->request('POST', '/file/resize/50', [], ['file' => $file]);
+
+        $this->assertSame(400, $client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('must be a JPEG, PNG or GIF', $client->getResponse()->getContent());
+    }
+
+    /**
+     * Passes the magic-byte sniff but carries no pixel data, so it exercises the
+     * path where Imagick itself refuses the file.
+     */
+    private function createPngHeaderOnly(int $width, int $height): string
+    {
+        $chunk = static function (string $type, string $data): string {
+            return pack('N', strlen($data)) . $type . $data . pack('N', crc32($type . $data));
+        };
+
+        $ihdr = pack('NN', $width, $height) . pack('CCCCC', 8, 2, 0, 0, 0);
+
+        return "\x89PNG\r\n\x1a\n" . $chunk('IHDR', $ihdr) . $chunk('IEND', '');
+    }
+
     public function testResizeRejectsSizeOutsideAllowedRange(): void
     {
         $file = $this->createUploadedImage();

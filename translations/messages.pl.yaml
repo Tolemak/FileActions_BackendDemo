@@ -95,16 +95,17 @@ error:
     file_not_found: Nie znaleziono pliku
     invalid_file_type: Plik musi być w formacie JPEG, PNG lub GIF
     file_too_large: Rozmiar pliku musi być mniejszy niż 5MB
+    image_too_large: Obraz ma zbyt duże wymiary, aby go przetworzyć
     resize_invalid_size: Rozmiar musi być pomiędzy 10 a 300
-    resize_failed: "Błąd podczas zmiany rozmiaru pliku: %message%"
+    resize_failed: Nie udało się zmienić rozmiaru pliku. Spróbuj ponownie.
     convert_invalid_extension: Format docelowy musi być jpeg, png lub gif
-    convert_failed: "Błąd podczas konwersji pliku: %message%"
+    convert_failed: Nie udało się przekonwertować pliku. Spróbuj ponownie.
     compress_invalid_ratio: Poziom kompresji musi być pomiędzy 1 a 100
-    compress_failed: "Błąd podczas kompresji pliku: %message%"
+    compress_failed: Nie udało się skompresować pliku. Spróbuj ponownie.
     rotate_invalid_degrees: Kąt obrotu musi być pomiędzy 0 a 360
-    rotate_failed: "Błąd podczas obracania pliku: %message%"
+    rotate_failed: Nie udało się obrócić pliku. Spróbuj ponownie.
     sepia_invalid_intensity: Intensywność musi być pomiędzy 1 a 100
-    sepia_failed: "Błąd podczas nakładania filtru sepia: %message%"
+    sepia_failed: Nie udało się nałożyć filtru sepia. Spróbuj ponownie.
 
 js:
     network_error_title: Błąd sieci
