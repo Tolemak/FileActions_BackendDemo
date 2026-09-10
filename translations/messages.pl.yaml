@@ -2,6 +2,7 @@ nav:
     home: Strona główna
     lang_pl: PL
     lang_en: EN
+    toggle_theme: Przełącz tryb jasny/ciemny
 
 common:
     cancel: Anuluj
