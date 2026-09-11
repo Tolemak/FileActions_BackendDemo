@@ -19,3 +19,5 @@ services:
     App\EventSubscriber\LocaleSubscriber:
         arguments:
             $defaultLocale: '%kernel.default_locale%'
+
+    App\Service\FileServiceInterface: '@App\Service\FileService'

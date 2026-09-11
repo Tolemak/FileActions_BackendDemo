@@ -10,7 +10,7 @@ use ImagickPixel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class FileService
+class FileService implements FileServiceInterface
 {
     /**
      * A 5 MB upload can still decode to hundreds of megapixels, so the byte
