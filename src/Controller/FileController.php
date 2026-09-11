@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Enum\ExtensionToConvert;
 use App\Exception\ImageTooLargeException;
 use App\Exception\InvalidImageException;
-use App\Service\FileService;
+use App\Service\FileServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -32,15 +32,16 @@ final class FileController extends AbstractController
     }
 
     #[Route('/resize/{size}', requirements: ['size' => '\d+'], name: 'resize', methods: ['POST'])]
-    public function resizeAction(Request $request, FileService $fileService, int $size): Response
+    public function resizeAction(Request $request, FileServiceInterface $fileService, int $size): Response
     {
         $file = $this->resolveFile($request);
         if ($file instanceof Response) {
             return $file;
         }
 
-        if ($size < 10 || $size > 300) {
-            return new Response($this->translator->trans('error.resize_invalid_size'), Response::HTTP_BAD_REQUEST);
+        $error = $this->validateRange($size, 10, 300, 'error.resize_invalid_size');
+        if ($error !== null) {
+            return $error;
         }
 
         return $this->respondWithProcessedFile(
@@ -52,7 +53,7 @@ final class FileController extends AbstractController
     }
 
     #[Route('/convert/{extension}', name: 'convert', methods: ['POST'])]
-    public function convertAction(Request $request, FileService $fileService, string $extension): Response
+    public function convertAction(Request $request, FileServiceInterface $fileService, string $extension): Response
     {
         $file = $this->resolveFile($request);
         if ($file instanceof Response) {
@@ -73,15 +74,16 @@ final class FileController extends AbstractController
     }
 
     #[Route('/compress/{ratio}', requirements: ['ratio' => '\d+'], name: 'compress', methods: ['POST'])]
-    public function compressAction(Request $request, FileService $fileService, int $ratio): Response
+    public function compressAction(Request $request, FileServiceInterface $fileService, int $ratio): Response
     {
         $file = $this->resolveFile($request);
         if ($file instanceof Response) {
             return $file;
         }
 
-        if ($ratio < 1 || $ratio > 100) {
-            return new Response($this->translator->trans('error.compress_invalid_ratio'), Response::HTTP_BAD_REQUEST);
+        $error = $this->validateRange($ratio, 1, 100, 'error.compress_invalid_ratio');
+        if ($error !== null) {
+            return $error;
         }
 
         return $this->respondWithProcessedFile(
@@ -93,15 +95,16 @@ final class FileController extends AbstractController
     }
 
     #[Route('/rotate/{degrees}', requirements: ['degrees' => '\d+'], name: 'rotate', methods: ['POST'])]
-    public function rotateAction(Request $request, FileService $fileService, int $degrees): Response
+    public function rotateAction(Request $request, FileServiceInterface $fileService, int $degrees): Response
     {
         $file = $this->resolveFile($request);
         if ($file instanceof Response) {
             return $file;
         }
 
-        if ($degrees < 0 || $degrees > 360) {
-            return new Response($this->translator->trans('error.rotate_invalid_degrees'), Response::HTTP_BAD_REQUEST);
+        $error = $this->validateRange($degrees, 0, 360, 'error.rotate_invalid_degrees');
+        if ($error !== null) {
+            return $error;
         }
 
         return $this->respondWithProcessedFile(
@@ -113,15 +116,16 @@ final class FileController extends AbstractController
     }
 
     #[Route('/sepia/{intensity}', requirements: ['intensity' => '\d+'], name: 'sepia', methods: ['POST'])]
-    public function sepiaAction(Request $request, FileService $fileService, int $intensity): Response
+    public function sepiaAction(Request $request, FileServiceInterface $fileService, int $intensity): Response
     {
         $file = $this->resolveFile($request);
         if ($file instanceof Response) {
             return $file;
         }
 
-        if ($intensity < 1 || $intensity > 100) {
-            return new Response($this->translator->trans('error.sepia_invalid_intensity'), Response::HTTP_BAD_REQUEST);
+        $error = $this->validateRange($intensity, 1, 100, 'error.sepia_invalid_intensity');
+        if ($error !== null) {
+            return $error;
         }
 
         return $this->respondWithProcessedFile(
@@ -130,6 +134,15 @@ final class FileController extends AbstractController
             (string) $file->getMimeType(),
             'error.sepia_failed',
         );
+    }
+
+    private function validateRange(int $value, int $min, int $max, string $errorKey): ?Response
+    {
+        if ($value < $min || $value > $max) {
+            return new Response($this->translator->trans($errorKey), Response::HTTP_BAD_REQUEST);
+        }
+
+        return null;
     }
 
     /**
