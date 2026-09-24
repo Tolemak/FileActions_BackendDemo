@@ -1,12 +1,23 @@
-## Dev container
+## Container
 
-PHP 8.3 + Apache + Imagick + Xdebug, for running this app locally without
-installing PHP natively.
+PHP 8.3 + Apache + Imagick, for running this app without installing PHP
+natively. `php/Dockerfile` has two targets:
+
+- `prod` (default): opcache, `display_errors=Off`, `expose_php=Off`, no Xdebug
+- `dev`: `prod` plus Xdebug and `php.dev.ini` (`display_errors=On`)
 
 ## Run
 
+Production image:
+
 ```bash
 docker compose up -d --build
+```
+
+Dev image:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
 Then, from the repo root (not inside the container):

@@ -2,19 +2,19 @@
 
 *Read this in other languages: [Polski](README.pl.md)*
 
-Symfony 7.2 / PHP 8.3 backend that runs Imagick-backed image operations
+Symfony 7.4 / PHP 8.3 backend that runs Imagick-backed image operations
 (resize, format conversion, compression, rotation, sepia tone) behind a
 small REST API, with a Bootstrap + FilePond + TypeScript frontend on top.
 
 ## Stack
 
-- **Backend**: Symfony 7.2, PHP 8.3, Imagick (`ext-imagick`)
+- **Backend**: Symfony 7.4, PHP 8.3, Imagick (`ext-imagick`)
 - **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5
 - **i18n**: `symfony/translation`, session-sticky locale switch (`en` / `pl`)
 - **Tests**: PHPUnit — unit tests on `FileService`, functional tests on every
   controller (happy path + every validation branch) via `WebTestCase`
-- **Containers**: `container/` ships a PHP 8.3 + Apache + Xdebug image
-  (Podman/Docker Compose)
+- **Containers**: `container/` ships a PHP 8.3 + Apache image (Docker
+  Compose), production by default, Xdebug only in the `dev` target
 
 Only what's actually used is installed: no Doctrine, no Security bundle,
 no Messenger/Mailer/Notifier, no asset-mapper/Stimulus — this app has no
@@ -41,13 +41,21 @@ Browsable versions of each action live under `/file-view/*`.
 
 ## Running it
 
-**Docker** (matches `container/` exactly, PHP + Imagick + Xdebug preinstalled):
+**Docker** — the default build is the production image (opcache,
+`display_errors=Off`, no Xdebug):
 
 ```bash
 cd container
 docker compose up -d --build
 docker compose exec web-server composer install
 npm install && npm run build   # on the host — no Node in the container
+```
+
+For development add `docker-compose.dev.yml`, which builds the `dev` target
+(Xdebug, `display_errors=On`):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
 App is served at `http://localhost:40055`. See `container/README.md` for
@@ -61,8 +69,9 @@ npm install && npm run build   # or `npm run dev` for a Vite dev server
 php -S 127.0.0.1:8000 -t public
 ```
 
-Copy `.env` to `.env.local` and set `APP_ENV=dev` for the profiler/toolbar
-and readable error pages; the checked-in `.env` defaults to `prod`.
+`composer install` creates `.env` from `.env.example`, which defaults to
+`prod`. Set `APP_ENV=dev` and `APP_DEBUG=1` in `.env.local` for the
+profiler/toolbar and readable error pages.
 
 ## Tests
 

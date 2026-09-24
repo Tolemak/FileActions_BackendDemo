@@ -2,20 +2,20 @@
 
 *Dostępne również w: [English](README.md)*
 
-Backend Symfony 7.2 / PHP 8.3 wykonujący operacje na obrazach oparte na
+Backend Symfony 7.4 / PHP 8.3 wykonujący operacje na obrazach oparte na
 Imagick (zmiana rozmiaru, konwersja formatu, kompresja, obrót, filtr
 sepia) udostępnione jako niewielkie REST API, plus frontend na bazie
 Bootstrap + FilePond + TypeScript.
 
 ## Stack
 
-- **Backend**: Symfony 7.2, PHP 8.3, Imagick (`ext-imagick`)
+- **Backend**: Symfony 7.4, PHP 8.3, Imagick (`ext-imagick`)
 - **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5
 - **i18n**: `symfony/translation`, przełącznik języka trzymany w sesji (`en` / `pl`)
 - **Testy**: PHPUnit — testy jednostkowe `FileService`, testy funkcjonalne
   każdego kontrolera (happy path + każda gałąź walidacji) przez `WebTestCase`
-- **Kontenery**: `container/` zawiera obraz PHP 8.3 + Apache + Xdebug
-  (Podman/Docker Compose)
+- **Kontenery**: `container/` zawiera obraz PHP 8.3 + Apache (Docker
+  Compose), domyślnie produkcyjny, Xdebug tylko w targecie `dev`
 
 Zainstalowane jest tylko to, co faktycznie jest używane: bez Doctrine, bez
 bundla Security, bez Messenger/Mailer/Notifier, bez asset-mapper/Stimulus —
@@ -42,14 +42,21 @@ wersje każdej akcji są dostępne pod `/file-view/*`.
 
 ## Uruchomienie
 
-**Docker** (dokładnie to, co jest w `container/`, PHP + Imagick + Xdebug już
-zainstalowane):
+**Docker** — domyślnie budowany jest obraz produkcyjny (opcache,
+`display_errors=Off`, bez Xdebuga):
 
 ```bash
 cd container
 docker compose up -d --build
 docker compose exec web-server composer install
 npm install && npm run build   # na hoście — w kontenerze nie ma Node
+```
+
+Do pracy lokalnej dołóż `docker-compose.dev.yml`, który buduje target `dev`
+(Xdebug, `display_errors=On`):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
 Aplikacja dostępna pod `http://localhost:40055`. Szczegóły konfiguracji
@@ -63,8 +70,9 @@ npm install && npm run build   # albo `npm run dev` dla serwera deweloperskiego 
 php -S 127.0.0.1:8000 -t public
 ```
 
-Skopiuj `.env` do `.env.local` i ustaw `APP_ENV=dev`, żeby mieć profiler,
-toolbar i czytelne strony błędów; wersja `.env` w repo domyślnie ustawia `prod`.
+`composer install` tworzy `.env` z `.env.example`, który domyślnie ustawia
+`prod`. Ustaw `APP_ENV=dev` i `APP_DEBUG=1` w `.env.local`, żeby mieć
+profiler, toolbar i czytelne strony błędów.
 
 ## Testy
 
