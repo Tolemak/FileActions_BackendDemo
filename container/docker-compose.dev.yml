@@ -1,0 +1,4 @@
+services:
+  web-server:
+    build:
+      target: dev

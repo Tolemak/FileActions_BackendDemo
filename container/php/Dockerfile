@@ -1,7 +1,5 @@
-FROM php:8.3-apache
+FROM php:8.3-apache AS base
 
-# Only what this app actually needs: Imagick for image processing, zip for
-# Composer, and Xdebug for step debugging (see ../../.vscode/launch.json).
 # libmagickwand-7.q16-10 and libgomp1 are runtime deps imagick.so links
 # against; they aren't pulled in as hard deps of libmagickwand-dev/gcc, so
 # without listing them explicitly the purge below removes them and imagick
@@ -13,9 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libgomp1 \
         libzip-dev \
         unzip \
-    && pecl install imagick xdebug \
-    && docker-php-ext-enable imagick xdebug \
-    && docker-php-ext-install -j"$(nproc)" zip \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-install -j"$(nproc)" opcache zip \
     && apt-get purge -y --auto-remove $PHPIZE_DEPS \
     && rm -rf /var/lib/apt/lists/* \
     && a2enmod rewrite \
@@ -28,5 +26,18 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # the ImageTragick family (MSL/MVG/SVG/URL fetch) rather than relying on the
 # upload check alone.
 COPY imagemagick-policy.xml /etc/ImageMagick-7/policy.xml
+COPY php.ini "$PHP_INI_DIR/php.ini"
 
 WORKDIR /var/www/site
+
+FROM base AS dev
+
+RUN apt-get update && apt-get install -y --no-install-recommends $PHPIZE_DEPS \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY php.dev.ini "$PHP_INI_DIR/conf.d/zz-dev.ini"
+
+FROM base AS prod

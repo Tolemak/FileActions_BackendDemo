@@ -4,10 +4,10 @@ services:
   web-server:
     build:
       context: ./php
+      target: prod
     restart: unless-stopped
     volumes:
       - ..:/var/www/site:z
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf:z
-      - ./php/php.ini:/usr/local/etc/php/php.ini:z
     ports:
       - "40055:80"
