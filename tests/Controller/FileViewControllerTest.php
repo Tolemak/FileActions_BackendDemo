@@ -40,6 +40,18 @@ class FileViewControllerTest extends WebTestCase
         $this->assertSelectorExists('a[href="/file-view/sepia"]');
     }
 
+    /**
+     * @dataProvider viewRouteProvider
+     */
+    public function testFooterLinksToPortfolioAndRepository(string $path): void
+    {
+        $client = static::createClient();
+        $client->request('GET', $path);
+
+        $this->assertSelectorExists('.app-footer a[href="https://kamil-galkowski.pl"]');
+        $this->assertSelectorExists('.app-footer a[href="https://github.com/Tolemak/FileActions_BackendDemo"]');
+    }
+
     public function testHomepageRedirectsToMainView(): void
     {
         $client = static::createClient();

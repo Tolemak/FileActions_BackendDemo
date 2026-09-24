@@ -107,6 +107,10 @@ error:
     sepia_invalid_intensity: Intensywność musi być pomiędzy 1 a 100
     sepia_failed: Nie udało się nałożyć filtru sepia. Spróbuj ponownie.
 
+footer:
+    portfolio: portfolio
+    source: Kod na GitHubie
+
 js:
     network_error_title: Błąd sieci
     network_error_text: Nie udało się połączyć z serwerem. Sprawdź połączenie i spróbuj ponownie.

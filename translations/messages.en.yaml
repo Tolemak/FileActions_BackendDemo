@@ -107,6 +107,10 @@ error:
     sepia_invalid_intensity: Intensity must be between 1 and 100
     sepia_failed: Could not apply the sepia filter. Please try again.
 
+footer:
+    portfolio: portfolio
+    source: Source on GitHub
+
 js:
     network_error_title: Network Error
     network_error_text: Could not reach the server. Please check your connection and try again.
