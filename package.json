@@ -4,14 +4,17 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run"
     },
     "devDependencies": {
+        "typescript": "^5.9.0",
         "vite": "^6.0",
         "vite-plugin-symfony": "^8.0",
-        "typescript": "^5.9.0"
+        "vitest": "^4.1.11"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.7.2",
         "bootstrap": "^5.3.5",
         "filepond": "^4.32.7",
         "sweetalert2": "^11.17.2"

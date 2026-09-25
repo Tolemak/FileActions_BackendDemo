@@ -33,14 +33,6 @@ jobs:
       - name: Static analysis
         run: vendor/bin/phpstan analyse --no-progress
 
-      - name: Run tests with coverage
-        run: vendor/bin/phpunit --coverage-clover var/coverage/clover.xml
-        env:
-          APP_ENV: test
-
-      - name: Enforce coverage threshold
-        run: php bin/check-coverage.php var/coverage/clover.xml 80
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -50,8 +42,19 @@ jobs:
       - name: Type-check frontend
         run: npm run typecheck
 
-      - name: Verify frontend build
+      - name: Frontend tests
+        run: npm test
+
+      - name: Build frontend
         run: npm run build
+
+      - name: Run tests with coverage
+        run: vendor/bin/phpunit --coverage-clover var/coverage/clover.xml
+        env:
+          APP_ENV: test
+
+      - name: Enforce coverage threshold
+        run: php bin/check-coverage.php var/coverage/clover.xml 80
 
       - name: Deploy to Mikrus
         env:
