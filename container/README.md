@@ -27,7 +27,7 @@ docker compose -f container/docker-compose.yml exec web-server composer install
 npm install && npm run build
 ```
 
-App is served at `http://localhost:40055`.
+App is served at `http://localhost:40055` (published on `127.0.0.1` only).
 
 ## Notes
 

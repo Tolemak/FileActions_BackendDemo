@@ -10,4 +10,4 @@ services:
       - ..:/var/www/site:z
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf:z
     ports:
-      - "40055:80"
+      - "127.0.0.1:40055:80"
