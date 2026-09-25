@@ -4,9 +4,10 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-imagick": "*",
         "pentatrion/vite-bundle": "^8.2.4",
         "symfony/asset": "7.4.*",
         "symfony/console": "7.4.*",
@@ -30,6 +31,9 @@
             "symfony/runtime": true
         },
         "bump-after-update": true,
+        "platform": {
+            "php": "8.3.0"
+        },
         "sort-packages": true
     },
     "autoload": {
