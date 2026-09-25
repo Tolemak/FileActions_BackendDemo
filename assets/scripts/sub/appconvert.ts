@@ -24,10 +24,10 @@ class ConvertApp extends SubAppWithFilePond {
     ): Promise<void> {
         const destExtension = this._extensionSelectElement.value;
 
-        const blob = await processFileAction(`/file/convert/${destExtension}`, fieldName, file, load, error);
+        const result = await processFileAction(`/file/convert/${destExtension}`, fieldName, file, load, error);
         this._filePond.removeFiles();
-        if (blob) {
-            saveBlobAsFile(blob, file);
+        if (result) {
+            saveBlobAsFile(result);
         }
     }
 

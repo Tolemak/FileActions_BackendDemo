@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Enum\ExtensionToConvert;
 use App\Exception\ImageTooLargeException;
 use App\Exception\InvalidImageException;
+use App\Http\DownloadFilename;
 use App\Service\FileServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,13 +17,9 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-use function App\replace_extension;
-
 #[Route('/file', name: 'app_file_')]
 final class FileController extends AbstractController
 {
-    private const array ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-
     private const int MAX_UPLOAD_BYTES = 5_000_000;
 
     public function __construct(
@@ -46,8 +43,7 @@ final class FileController extends AbstractController
 
         return $this->respondWithProcessedFile(
             static fn (): string => $fileService->resize($file, $size),
-            $file->getClientOriginalName(),
-            (string) $file->getMimeType(),
+            $file,
             'error.resize_failed',
         );
     }
@@ -67,9 +63,9 @@ final class FileController extends AbstractController
 
         return $this->respondWithProcessedFile(
             static fn (): string => $fileService->changeExtension($file, $targetExtension),
-            replace_extension($file->getClientOriginalName(), $targetExtension->value),
-            'image/' . $targetExtension->value,
+            $file,
             'error.convert_failed',
+            $targetExtension,
         );
     }
 
@@ -88,8 +84,7 @@ final class FileController extends AbstractController
 
         return $this->respondWithProcessedFile(
             static fn (): string => $fileService->compress($file, $ratio),
-            $file->getClientOriginalName(),
-            (string) $file->getMimeType(),
+            $file,
             'error.compress_failed',
         );
     }
@@ -109,8 +104,7 @@ final class FileController extends AbstractController
 
         return $this->respondWithProcessedFile(
             static fn (): string => $fileService->rotate($file, $degrees),
-            $file->getClientOriginalName(),
-            (string) $file->getMimeType(),
+            $file,
             'error.rotate_failed',
         );
     }
@@ -130,8 +124,7 @@ final class FileController extends AbstractController
 
         return $this->respondWithProcessedFile(
             static fn (): string => $fileService->applySepiaTone($file, $intensity),
-            $file->getClientOriginalName(),
-            (string) $file->getMimeType(),
+            $file,
             'error.sepia_failed',
         );
     }
@@ -157,7 +150,7 @@ final class FileController extends AbstractController
             return new Response($this->translator->trans('error.file_not_found'), Response::HTTP_BAD_REQUEST);
         }
 
-        if (!in_array($file->getMimeType(), self::ALLOWED_MIME_TYPES, true)) {
+        if (ExtensionToConvert::fromMimeType((string) $file->getMimeType()) === null) {
             return new Response($this->translator->trans('error.invalid_file_type'), Response::HTTP_BAD_REQUEST);
         }
 
@@ -173,10 +166,14 @@ final class FileController extends AbstractController
      */
     private function respondWithProcessedFile(
         callable $operation,
-        string $filename,
-        string $contentType,
+        UploadedFile $source,
         string $failureKey,
+        ?ExtensionToConvert $outputFormat = null,
     ): Response {
+        $outputFormat ??= ExtensionToConvert::fromMimeType((string) $source->getMimeType())
+            ?? throw new \LogicException('Unsupported source format.');
+        $filename = DownloadFilename::fromClientName($source->getClientOriginalName(), $outputFormat->fileExtension());
+
         try {
             $resultPath = $operation();
         } catch (ImageTooLargeException) {
@@ -189,8 +186,8 @@ final class FileController extends AbstractController
             return new Response($this->translator->trans($failureKey), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $response = new BinaryFileResponse($resultPath, Response::HTTP_OK, ['Content-Type' => $contentType]);
-        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename, 'download');
+        $response = new BinaryFileResponse($resultPath, Response::HTTP_OK, ['Content-Type' => $outputFormat->mimeType()]);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename->name, $filename->asciiFallback);
         $response->deleteFileAfterSend(true);
 
         return $response;

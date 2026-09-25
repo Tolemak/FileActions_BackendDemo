@@ -1,13 +1,19 @@
 import Swal from 'sweetalert2';
+import { filenameFromContentDisposition } from './filename.js';
 
 /** Matches both a native File and FilePond's looser ActualFileObject. */
 export type NamedBlob = Blob & { readonly name: string };
 
-export function saveBlobAsFile(blob: Blob, file: NamedBlob): void {
+export interface ProcessedFile {
+    blob: Blob;
+    filename: string;
+}
+
+export function saveBlobAsFile({ blob, filename }: ProcessedFile): void {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = file.name;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -54,7 +60,7 @@ export async function processFileAction(
     file: NamedBlob,
     load: (uniqueFileId: string) => void,
     error: (errorText: string) => void,
-): Promise<Blob | null> {
+): Promise<ProcessedFile | null> {
     const formData = new FormData();
     formData.append(fieldName, file, file.name);
 
@@ -77,5 +83,8 @@ export async function processFileAction(
     const blob = await response.blob();
     load(String(response.status));
 
-    return blob;
+    return {
+        blob,
+        filename: filenameFromContentDisposition(response.headers.get('Content-Disposition'), file.name),
+    };
 }

@@ -20,7 +20,7 @@ class FileControllerTest extends WebTestCase
         parent::tearDown();
     }
 
-    private function createUploadedImage(string $extension = 'png', int $width = 20, int $height = 10): UploadedFile
+    private function createUploadedImage(string $extension = 'png', int $width = 20, int $height = 10, ?string $clientName = null): UploadedFile
     {
         $path = tempnam(sys_get_temp_dir(), 'fixture') . '.' . $extension;
         $image = new Imagick();
@@ -31,7 +31,7 @@ class FileControllerTest extends WebTestCase
 
         $this->tempFiles[] = $path;
 
-        return new UploadedFile($path, 'sample.' . $extension, 'image/' . $extension, null, true);
+        return new UploadedFile($path, $clientName ?? 'sample.' . $extension, 'image/' . $extension, null, true);
     }
 
     public function testResizeRejectsMissingFile(): void
@@ -146,7 +146,36 @@ class FileControllerTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('image/jpeg', $response->headers->get('Content-Type'));
-        $this->assertStringContainsString('sample.jpeg', (string) $response->headers->get('Content-Disposition'));
+        $this->assertSame('attachment; filename=sample.jpg', $response->headers->get('Content-Disposition'));
+    }
+
+    public function testConvertSanitizesClientFilename(): void
+    {
+        $file = $this->createUploadedImage('png', clientName: "..\\..\\zdjęcie\r\nX-Injected: 1.png");
+
+        $client = static::createClient();
+        $client->request('POST', '/file/convert/gif', [], ['file' => $file]);
+
+        $response = $client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(
+            'attachment; filename="zdjecie_X-Injected_ 1.gif"; filename*=utf-8\'\'zdj%C4%99cie_X-Injected_%201.gif',
+            $response->headers->get('Content-Disposition'),
+        );
+        $this->assertFalse($response->headers->has('X-Injected'));
+    }
+
+    public function testProcessedFileExtensionFollowsDetectedFormat(): void
+    {
+        $file = $this->createUploadedImage('jpeg', clientName: 'holiday.png');
+
+        $client = static::createClient();
+        $client->request('POST', '/file/rotate/90', [], ['file' => $file]);
+
+        $response = $client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('image/jpeg', $response->headers->get('Content-Type'));
+        $this->assertSame('attachment; filename=holiday.jpg', $response->headers->get('Content-Disposition'));
     }
 
     public function testCompressRejectsRatioOutsideAllowedRange(): void

@@ -1,6 +1,4 @@
 parameters:
-    # Fallback values used when the corresponding env var is not set (no .env is
-    # committed; real deployments provide these as actual environment variables).
     env(APP_SECRET): ''
     env(VAR_DUMPER_SERVER): '127.0.0.1:9912'
 
@@ -12,9 +10,7 @@ services:
     App\:
         resource: '../src/'
         exclude:
-            - '../src/Entity/'
             - '../src/Kernel.php'
-            - '../src/Utils.php'
 
     App\EventSubscriber\LocaleSubscriber:
         arguments:

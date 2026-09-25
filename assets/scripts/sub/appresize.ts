@@ -45,10 +45,10 @@ class ResizeApp extends SubAppWithFilePond {
             return;
         }
 
-        const blob = await processFileAction(`/file/resize/${ret.value}`, fieldName, file, load, error);
+        const result = await processFileAction(`/file/resize/${ret.value}`, fieldName, file, load, error);
         this._filePond.removeFiles();
-        if (blob) {
-            saveBlobAsFile(blob, file);
+        if (result) {
+            saveBlobAsFile(result);
         }
     }
 
