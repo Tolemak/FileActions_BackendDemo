@@ -52,6 +52,42 @@ class FileViewControllerTest extends WebTestCase
         $this->assertSelectorExists('.app-footer a[href="https://github.com/Tolemak/FileActions_BackendDemo"]');
     }
 
+    /**
+     * @dataProvider everyPageProvider
+     */
+    public function testEveryPageLoadsTheThemeToggleScript(string $path): void
+    {
+        if (!is_file(dirname(__DIR__, 2) . '/public/build/.vite/entrypoints.json')) {
+            $this->markTestSkipped('Frontend build missing, run `npm run build` first.');
+        }
+
+        $client = static::createClient();
+        $client->request('GET', $path);
+
+        $this->assertSelectorExists('#theme-toggle-btn');
+        $this->assertSelectorExists('script[type="module"][src*="/build/assets/appmain-"]');
+    }
+
+    /**
+     * @dataProvider everyPageProvider
+     */
+    public function testNoStylesheetIsLoadedFromAThirdPartyOrigin(string $path): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', $path);
+
+        $this->assertCount(0, $crawler->filter('link[href^="http"], link[href^="//"], script[src^="http"], script[src^="//"]'));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function everyPageProvider(): iterable
+    {
+        yield from self::viewRouteProvider();
+        yield 'not found' => ['/this-route-does-not-exist'];
+    }
+
     public function testHomepageRedirectsToMainView(): void
     {
         $client = static::createClient();
