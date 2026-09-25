@@ -10,10 +10,12 @@ Bootstrap + FilePond + TypeScript.
 ## Stack
 
 - **Backend**: Symfony 7.4, PHP 8.3, Imagick (`ext-imagick`)
-- **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5
+- **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5,
+  Font Awesome (bundlowany przez Vite, nic nie jest ładowane z CDN)
 - **i18n**: `symfony/translation`, przełącznik języka trzymany w sesji (`en` / `pl`)
 - **Testy**: PHPUnit — testy jednostkowe `FileService`, testy funkcjonalne
-  każdego kontrolera (happy path + każda gałąź walidacji) przez `WebTestCase`
+  każdego kontrolera (happy path + każda gałąź walidacji) przez `WebTestCase`;
+  Vitest dla helperów frontendu
 - **Kontenery**: `container/` zawiera obraz PHP 8.3 + Apache (Docker
   Compose), domyślnie produkcyjny, Xdebug tylko w targecie `dev`
 
@@ -26,7 +28,8 @@ tylko martwy balast i niepotrzebna powierzchnia ataku.
 
 Wszystkie pod `/file`, przyjmują jeden przesłany obraz (`jpeg`/`png`/`gif`,
 ≤5MB) przez `multipart/form-data`, zwracają przetworzony plik jako pobieranie
-binarne:
+binarne, nazwany jak przesłany plik (oczyszczona nazwa, rozszerzenie
+formatu wyjściowego):
 
 | Route | Metoda | Parametry |
 |---|---|---|
@@ -59,7 +62,8 @@ Do pracy lokalnej dołóż `docker-compose.dev.yml`, który buduje target `dev`
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
-Aplikacja dostępna pod `http://localhost:40055`. Szczegóły konfiguracji
+Aplikacja dostępna pod `http://localhost:40055`, port wystawiony tylko na
+`127.0.0.1` (na serwerze stoi przed nią reverse proxy). Szczegóły konfiguracji
 Xdebug i inne informacje — w `container/README.md`.
 
 **Natywny PHP** — wymaga PHP 8.3+ z rozszerzeniem `imagick` i Composera:
@@ -77,13 +81,17 @@ profiler, toolbar i czytelne strony błędów.
 ## Testy
 
 ```bash
+npm run build   # testy stron sprawdzają zbudowane entrypointy Vite
 php bin/phpunit
+npm test
 ```
 
 ## Struktura
 
 - `src/Controller/FileController.php` — API, po jednej akcji na operację,
-  wspólna walidacja wejścia w `checkTypicalIssues()`
+  wspólna walidacja uploadu w `resolveFile()`
+- `src/Http/DownloadFilename.php` — buduje nazwę do `Content-Disposition`
+  z nazwy pliku klienta (bez ścieżek, znaków sterujących i sztuczek z nagłówkami)
 - `src/Service/FileService.php` — właściwe wywołania Imagick, oddzielone od
   warstwy HTTP, dzięki czemu da się je testować jednostkowo bez uruchamiania kernela
 - `src/EventSubscriber/LocaleSubscriber.php` — czyta `?_locale`, zapisuje je

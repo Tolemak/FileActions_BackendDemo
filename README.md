@@ -9,10 +9,12 @@ small REST API, with a Bootstrap + FilePond + TypeScript frontend on top.
 ## Stack
 
 - **Backend**: Symfony 7.4, PHP 8.3, Imagick (`ext-imagick`)
-- **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5
+- **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5,
+  Font Awesome (bundled by Vite, nothing loaded from a CDN)
 - **i18n**: `symfony/translation`, session-sticky locale switch (`en` / `pl`)
 - **Tests**: PHPUnit — unit tests on `FileService`, functional tests on every
-  controller (happy path + every validation branch) via `WebTestCase`
+  controller (happy path + every validation branch) via `WebTestCase`;
+  Vitest for the frontend helpers
 - **Containers**: `container/` ships a PHP 8.3 + Apache image (Docker
   Compose), production by default, Xdebug only in the `dev` target
 
@@ -25,7 +27,8 @@ weight and attack surface.
 
 All under `/file`, accept a single uploaded image (`jpeg`/`png`/`gif`,
 ≤5MB) via `multipart/form-data`, return the processed file as a binary
-download:
+download named after the uploaded file (sanitized, with the extension of
+the output format):
 
 | Route | Method | Params |
 |---|---|---|
@@ -58,7 +61,8 @@ For development add `docker-compose.dev.yml`, which builds the `dev` target
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
-App is served at `http://localhost:40055`. See `container/README.md` for
+App is served at `http://localhost:40055`, published on `127.0.0.1` only
+(on the server a reverse proxy sits in front). See `container/README.md` for
 Xdebug setup and other details.
 
 **Native PHP** — needs PHP 8.3+ with the `imagick` extension and Composer:
@@ -76,13 +80,17 @@ profiler/toolbar and readable error pages.
 ## Tests
 
 ```bash
+npm run build   # the page tests check the built Vite entrypoints
 php bin/phpunit
+npm test
 ```
 
 ## Layout
 
 - `src/Controller/FileController.php` — the API, one action per operation,
-  shared input validation in `checkTypicalIssues()`
+  shared upload validation in `resolveFile()`
+- `src/Http/DownloadFilename.php` — builds the `Content-Disposition` name
+  from the client filename (no paths, control characters or header tricks)
 - `src/Service/FileService.php` — the actual Imagick calls, kept separate
   from HTTP concerns so it's unit-testable without booting the kernel
 - `src/EventSubscriber/LocaleSubscriber.php` — reads `?_locale`, persists
