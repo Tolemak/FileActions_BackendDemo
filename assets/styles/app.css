@@ -1,58 +1,258 @@
-/*
- * Shared across every page: a subtle entrance animation plus native
- * cross-document view transitions (Chromium browsers) for a smooth
- * fade/slide between pages instead of a hard page-flash. Both degrade
- * silently where unsupported, and both back off for reduced-motion.
- */
+/* A workbench with a self-healing cutting mat: green mat in the dark theme, blue mat in the light one. */
+:root {
+    --chrome: #eef0ef;
+    --tray: #ffffff;
+    --text: #1b201e;
+    --muted: #56615b;
+    --line: #d4dad7;
+    --mat: #2b5a86;
+    --mat-line: rgba(255, 255, 255, 0.12);
+    --mat-line-strong: rgba(255, 255, 255, 0.26);
+    --mat-number: rgba(255, 255, 255, 0.75);
+    --yellow: #ffd84d;
+    --on-yellow: #1b1b12;
+    --paper: #fbfbf7;
+    --paper-text: #1b201e;
+    --paper-muted: #5a625d;
+    --link: #1f5f96;
+
+    --font: 'Archivo Variable', 'Arial Narrow', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+    --square: 16px;
+
+    --tb-bg: #ffffff;
+    --tb-fg: var(--text);
+    --tb-muted: var(--muted);
+    --tb-line: var(--line);
+    --tb-accent: #1f6b48;
+
+    color-scheme: light;
+}
+
+[data-theme='dark'] {
+    --chrome: #141816;
+    --tray: #1b201e;
+    --text: #e3e9e5;
+    --muted: #97a39c;
+    --line: #2b332f;
+    --mat: #2e6a50;
+    --link: #f3d34a;
+    --yellow: #f3d34a;
+
+    --tb-bg: #101311;
+    --tb-accent: var(--yellow);
+
+    color-scheme: dark;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--chrome);
+    color: var(--text);
+    font: 400 16px/1.55 var(--font);
+    font-stretch: 100%;
+}
+
+a {
+    color: var(--link);
+}
+
+:focus-visible {
+    outline: 2px solid var(--yellow);
+    outline-offset: 2px;
+}
+
+/* ---------- tool tray ---------- */
+
+.tray {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 32px;
+    padding: 18px max(20px, calc((100vw - 1120px) / 2));
+    background: var(--tray);
+    border-bottom: 1px solid var(--line);
+}
+
+.wordmark {
+    color: var(--text);
+    font: 800 24px/1 var(--font);
+    font-stretch: 125%;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+}
+
+.tools {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.tools a {
+    padding: 7px 12px;
+    border-radius: 4px;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 500;
+    font-stretch: 85%;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.tools a:hover {
+    color: var(--text);
+}
+
+.tools a[aria-current='page'] {
+    background: var(--yellow);
+    color: var(--on-yellow);
+    font-weight: 700;
+}
+
+/* ---------- bench ---------- */
+
+.bench {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 36px 20px 0;
+}
+
+.intro {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.intro h1 {
+    margin: 0;
+    font-size: clamp(30px, 5vw, 44px);
+    font-weight: 800;
+    font-stretch: 112%;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+}
+
+.lead {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--muted);
+    font-size: 17px;
+}
+
+/* ---------- cutting mat ---------- */
+
+.mat {
+    position: relative;
+    overflow: hidden;
+    padding: 34px 24px 32px 34px;
+    border-radius: 6px;
+    background-color: var(--mat);
+    background-image:
+        linear-gradient(var(--mat-line-strong) 1px, transparent 1px),
+        linear-gradient(90deg, var(--mat-line-strong) 1px, transparent 1px),
+        linear-gradient(var(--mat-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--mat-line) 1px, transparent 1px);
+    background-size:
+        calc(var(--square) * 5) calc(var(--square) * 5),
+        calc(var(--square) * 5) calc(var(--square) * 5),
+        var(--square) var(--square),
+        var(--square) var(--square);
+    background-position: 24px 24px;
+}
+
+/* The 45° guide line printed on every cutting mat. */
+.mat::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: linear-gradient(135deg, transparent calc(50% - 1px), var(--yellow) calc(50% - 1px), var(--yellow) calc(50% + 1px), transparent calc(50% + 1px));
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.ruler {
+    position: absolute;
+    top: 6px;
+    left: 24px;
+    right: 0;
+    display: flex;
+    color: var(--mat-number);
+    font: 500 10px var(--mono);
+    pointer-events: none;
+}
+
+.ruler span {
+    flex: none;
+    width: calc(var(--square) * 5);
+    transform: translateX(-3px);
+}
+
+.mat-surface {
+    position: relative;
+}
+
+/* Corner crop marks for anything laid on the mat. */
+.crop-marks {
+    position: relative;
+}
+
+.crop-marks::before,
+.crop-marks::after {
+    content: '';
+    position: absolute;
+    inset: -9px;
+    border: 2px solid #ffffff;
+    pointer-events: none;
+    clip-path: polygon(
+        0 0, 14px 0, 14px 2px, 2px 2px, 2px 14px, 0 14px,
+        0 calc(100% - 14px), 2px calc(100% - 14px), 2px calc(100% - 2px), 14px calc(100% - 2px), 14px 100%, 0 100%
+    );
+}
+
+.crop-marks::after {
+    transform: scaleX(-1);
+}
+
+/* ---------- footer ---------- */
+
+.app-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 28px 20px 76px;
+    font-size: 14px;
+}
+
+.app-footer a {
+    color: var(--muted);
+}
 
 @view-transition {
     navigation: auto;
 }
 
-@keyframes page-enter {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-body {
-    animation: page-enter 0.35s ease-out both;
-}
-
-::view-transition-old(root) {
-    animation: 180ms ease-in both view-transition-leave;
-}
-
-::view-transition-new(root) {
-    animation: 320ms ease-out both view-transition-enter;
-}
-
-@keyframes view-transition-leave {
-    to {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
-}
-
-@keyframes view-transition-enter {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    body {
-        animation: none;
+@media (max-width: 640px) {
+    .tray {
+        padding: 14px 16px;
     }
 
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-        animation: none;
+    .tools {
+        width: 100%;
+    }
+
+    .bench {
+        padding: 24px 16px 0;
+    }
+
+    .mat {
+        padding: 30px 14px 24px 18px;
     }
 }

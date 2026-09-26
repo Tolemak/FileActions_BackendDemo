@@ -1,153 +1,66 @@
-/* General Body and Container Styling */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bs-tertiary-bg); /* Softer than the plain body bg, follows the theme */
+/* The tools lie on the mat as cut-out sheets of paper. */
+.papers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 32px 28px;
+    margin: 12px 0 8px;
+    padding: 0;
+    list-style: none;
 }
 
-.theme-toggle-btn {
-    line-height: 1;
+.paper {
+    position: relative;
 }
 
-.container {
-    max-width: 960px; /* Limit container width for better readability on large screens */
+.paper:nth-child(odd) {
+    transform: rotate(-0.6deg);
 }
 
-/* Headings and Text */
-.display-3 {
-    color: var(--bs-primary);
+.paper:nth-child(even) {
+    transform: rotate(0.5deg);
 }
 
-.lead {
-    font-size: 1.15rem;
-    color: var(--bs-secondary-color);
+.paper a {
+    display: grid;
+    gap: 6px;
+    height: 100%;
+    padding: 18px 20px 20px;
+    background: var(--paper);
+    color: var(--paper-text);
+    text-decoration: none;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Action Card Styling */
-.action-card {
-    border: none; /* Remove default card border */
-    border-radius: 15px; /* More rounded corners */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    animation: card-enter 0.45s ease-out forwards;
+.paper a:hover,
+.paper a:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.32);
 }
 
-@keyframes card-enter {
-    from {
-        opacity: 0;
-        transform: translateY(16px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.paper-spec {
+    justify-self: start;
+    padding: 2px 7px;
+    background: var(--yellow);
+    color: var(--on-yellow);
+    font: 600 12px var(--mono);
 }
 
-.row > div:nth-child(1) .action-card { animation-delay: 0.05s; }
-.row > div:nth-child(2) .action-card { animation-delay: 0.1s; }
-.row > div:nth-child(3) .action-card { animation-delay: 0.15s; }
-.row > div:nth-child(4) .action-card { animation-delay: 0.2s; }
-.row > div:nth-child(5) .action-card { animation-delay: 0.25s; }
-.row > div:nth-child(6) .action-card { animation-delay: 0.3s; }
+.paper-title {
+    font-size: 24px;
+    font-weight: 800;
+    font-stretch: 112%;
+    letter-spacing: -0.01em;
+}
+
+.paper-text {
+    color: var(--paper-muted);
+    font-size: 15px;
+    font-stretch: 92%;
+}
 
 @media (prefers-reduced-motion: reduce) {
-    .action-card {
-        opacity: 1;
-        animation: none;
+    .paper a {
+        transition: none;
     }
-}
-
-.action-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Softer, larger shadow on hover */
-}
-
-.action-card .card-body {
-    padding: 2rem; /* More padding inside cards */
-}
-
-.action-icon i {
-    transition: transform 0.3s ease;
-}
-
-.action-card:hover .action-icon i {
-    transform: scale(1.1);
-}
-
-.action-card .btn {
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.action-card .btn:hover {
-    transform: translateY(-2px); /* Slight lift for button inside card */
-}
-
-/* Specific button colors for cards - ensure these match your Bootstrap theme or define them */
-.action-card .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-.action-card .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-}
-
-.action-card .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-.action-card .btn-secondary:hover {
-    background-color: #545b62;
-    border-color: #545b62;
-}
-
-.action-card .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-}
-.action-card .btn-success:hover {
-    background-color: #1e7e34;
-    border-color: #1e7e34;
-}
-
-/* Coming Soon Card Styling */
-.card-coming-soon {
-    opacity: 0.7;
-    background-color: var(--bs-secondary-bg);
-}
-
-.card-coming-soon .action-icon i {
-    opacity: 0.5;
-}
-
-.text-danger-disabled { color: #dc3545; opacity: 0.5; }
-.text-warning-disabled { color: #ffc107; opacity: 0.5; }
-.text-info-disabled { color: #17a2b8; opacity: 0.5; }
-
-.btn-outline-secondary:disabled {
-    cursor: not-allowed;
-}
-
-/* General Button Styling (from original, can be merged or refined) */
-.btn {
-    position: relative;
-    overflow: hidden;
-    /* transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease; */ /* Covered by card hover */
-    /* opacity: 0.9; */ /* Let card opacity handle this or set to 1 */
-}
-
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 300%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: skewX(-45deg);
-    transition: left 0.5s ease;
-}
-
-.btn:hover::before {
-    left: 100%;
 }

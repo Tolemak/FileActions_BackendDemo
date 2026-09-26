@@ -1,88 +1,156 @@
-/*
- * FilePond Custom Styles — a roomier, more inviting dropzone.
- */
-
-.filepond--root {
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-    font-size: 1rem;
+/* The working sheet on the mat: the drop area, options and the action button. */
+.sheet {
+    display: grid;
+    gap: 18px;
+    justify-items: center;
+    max-width: 520px;
+    margin: 12px auto 4px;
+    padding: 26px 24px 28px;
+    background: var(--paper);
+    color: var(--paper-text);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
 }
 
-.filepond--panel-root {
-    background-color: #f8f9fc;
-    border: 2px dashed #ced4da;
-    border-radius: 20px;
-    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+.sheet-code {
+    margin: 0;
+    font: 600 44px/1 var(--mono);
+    color: var(--paper-muted);
 }
 
-.filepond--drop-label {
-    min-height: 200px;
-    color: #495057;
+.sheet-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    font-stretch: 110%;
+    text-align: center;
 }
 
-.filepond--drop-label label {
-    font-size: 1.05rem;
-    padding: 1.5rem;
+.sheet p {
+    margin: 0;
+    color: var(--paper-muted);
+    text-align: center;
 }
 
-.filepond--drop-label::before {
-    content: '\f0ee';
-    display: block;
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    font-size: 2.5rem;
-    color: #adb5bd;
-    margin-bottom: 0.75rem;
-    transition: color 0.2s ease, transform 0.2s ease;
+.sheet-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.filepond--label-action {
-    text-decoration-color: #6c757d;
+.sheet-controls label {
+    color: var(--paper-muted);
     font-weight: 600;
 }
 
-/* Hover / drag-over feedback so the drop target reads as interactive */
-.filepond--root:hover .filepond--panel-root {
-    border-color: #adb5bd;
-    background-color: #f1f3f9;
+.sheet-controls select {
+    padding: 8px 12px;
+    border: 1.5px solid #1b201e;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #1b201e;
+    font: 600 15px var(--mono);
+}
+
+.cut-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 28px;
+    border: 0;
+    border-radius: 4px;
+    background: var(--yellow);
+    color: var(--on-yellow);
+    font: 700 16px var(--font);
+    font-stretch: 105%;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.cut-button:hover {
+    filter: brightness(1.05);
+}
+
+.cut-button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+/* ---------- FilePond as a dashed cut-out area on the sheet ---------- */
+
+.filepond--root {
+    width: 100%;
+    margin: 0;
+    font-family: var(--font);
+}
+
+.filepond--panel-root {
+    background-color: #f1f2ec;
+    border: 2px dashed #9aa39e;
+    border-radius: 2px;
+}
+
+.filepond--root .filepond--drop-label {
+    min-height: 190px;
+    color: #3f4742;
+}
+
+.filepond--drop-label label {
+    font-size: 16px;
+    padding: 20px;
+}
+
+.filepond--label-action {
+    text-decoration-color: #1b201e;
+    font-weight: 700;
+    color: #1b201e;
 }
 
 .filepond--hopper[data-hopper-state='drag-over'] .filepond--panel-root {
-    border-color: var(--fp-accent-color, #0d6efd);
-    background-color: #eaf2ff;
-    transform: scale(1.01);
+    border-color: #1b201e;
+    background-color: #fff6cf;
 }
 
-.filepond--hopper[data-hopper-state='drag-over'] .filepond--drop-label::before {
-    color: var(--fp-accent-color, #0d6efd);
-    transform: translateY(-4px);
+.filepond--item-panel {
+    background-color: #1b201e;
 }
 
-/* Dark theme: the dropzone is a light-tinted panel by design, so it needs
-   its own dark palette rather than inheriting Bootstrap's body variables. */
-[data-bs-theme='dark'] .filepond--panel-root {
-    background-color: #262b33;
-    border-color: #495057;
+[data-filepond-item-state='processing-complete'] .filepond--item-panel {
+    background-color: #1f6b48;
 }
 
-[data-bs-theme='dark'] .filepond--drop-label {
-    color: #ced4da;
+/* ---------- SweetAlert prompts in the page palette ---------- */
+
+.swal2-popup {
+    background: var(--tray);
+    color: var(--text);
+    border-radius: 6px;
+    font-family: var(--font);
 }
 
-[data-bs-theme='dark'] .filepond--drop-label::before {
-    color: #6c757d;
+.swal2-title {
+    color: var(--text);
+    font-stretch: 110%;
 }
 
-[data-bs-theme='dark'] .filepond--label-action {
-    text-decoration-color: #adb5bd;
+.swal2-html-container,
+.swal2-range output {
+    color: var(--muted);
 }
 
-[data-bs-theme='dark'] .filepond--root:hover .filepond--panel-root {
-    border-color: #6c757d;
-    background-color: #2e343d;
+.swal2-range output {
+    font-family: var(--mono);
 }
 
-[data-bs-theme='dark'] .filepond--hopper[data-hopper-state='drag-over'] .filepond--panel-root {
-    background-color: #1f2b3d;
+.swal2-styled.swal2-confirm {
+    background: var(--yellow);
+    color: var(--on-yellow);
+    font-weight: 700;
+}
+
+.swal2-styled.swal2-cancel {
+    background: transparent;
+    color: var(--text);
+    box-shadow: inset 0 0 0 1.5px var(--line);
 }

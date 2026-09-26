@@ -1,50 +1,9 @@
-<!DOCTYPE html>
-<html lang="{{ app.request.locale }}">
-	<head>
-		{% include 'file/_head.html.twig' %}
-		<title>
-			File Actions Demo - {% block title_action %}File Action{% endblock %}
-		</title>
-		{% block stylesheets %}
-			{{ vite_entry_link_tags('appmain') }}
-		{% endblock %}
-		{% block javascripts_head %}{% endblock %}
-	</head>
-	<body
-		class="py-5"
-		data-i18n-cancel="{{ 'common.cancel'|trans }}"
-		data-i18n-cancelled-title="{{ 'common.cancelled_title'|trans }}"
-		data-i18n-cancelled-text="{{ 'common.cancelled_text'|trans }}"
-		data-i18n-network-error-title="{{ 'js.network_error_title'|trans }}"
-		data-i18n-network-error-text="{{ 'js.network_error_text'|trans }}"
-	>
-		<div class="container">
-			<nav aria-label="breadcrumb" class="mb-4 d-flex justify-content-between align-items-center">
-				<ol class="breadcrumb mb-0">
-					<li class="breadcrumb-item"><a href="{{ path('app_view_main') }}"><i class="fas fa-home"></i> {{ 'nav.home'|trans }}</a></li>
-					<li class="breadcrumb-item active" aria-current="page">{% block breadcrumb_action %}Action{% endblock %}</li>
-				</ol>
-				<div class="d-flex align-items-center gap-3">
-					{% include 'file/_theme_toggle.html.twig' %}
-					{% include 'file/_locale_switcher.html.twig' %}
-				</div>
-			</nav>
+{% extends 'file/base.html.twig' %}
 
-			<div class="text-center">
-				<h1 class="display-4 text-primary mb-3 fw-bold">
-					{% block header %}File Action{% endblock %}
-				</h1>
-				<p class="lead text-muted col-md-8 mx-auto mb-5">
-					{% block description %}{% endblock %}
-				</p>
-			</div>
-			<div class="card shadow-lg p-4 p-md-5"> 
-				{% block content %}{% endblock %}
-			</div>
-			{% include 'file/_footer.html.twig' %}
-		</div>
-		{% block javascripts_body %}
-			{{ vite_entry_script_tags('appmain') }}
-		{% endblock %}
-	</body>
-</html>
+{% block title %}{% block title_action %}{% endblock %} · File Actions{% endblock %}
+
+{% block content %}
+	<div class="sheet crop-marks">
+		{% block sheet %}{% endblock %}
+	</div>
+{% endblock %}

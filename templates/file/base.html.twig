@@ -1,0 +1,67 @@
+{% set tools = [
+	{id: 'resize', spec: '10–300 %'},
+	{id: 'convert', spec: 'JPG / PNG / GIF'},
+	{id: 'compress', spec: '1–100'},
+	{id: 'rotate', spec: '0–360°'},
+	{id: 'sepia', spec: '1–100'},
+] %}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+	<head>
+		{% include 'file/_head.html.twig' %}
+		<title>{% block title %}File Actions{% endblock %}</title>
+		{% block stylesheets %}
+			{{ vite_entry_link_tags('appmain') }}
+		{% endblock %}
+	</head>
+	<body
+		data-i18n-cancel="{{ 'common.cancel'|trans }}"
+		data-i18n-cancelled-title="{{ 'common.cancelled_title'|trans }}"
+		data-i18n-cancelled-text="{{ 'common.cancelled_text'|trans }}"
+		data-i18n-network-error-title="{{ 'js.network_error_title'|trans }}"
+		data-i18n-network-error-text="{{ 'js.network_error_text'|trans }}"
+	>
+		<header class="tray">
+			<a class="wordmark" href="{{ path('app_view_main') }}">File Actions</a>
+			<nav class="tools" aria-label="{{ 'nav.tools'|trans }}">
+				{% for tool in tools %}
+					<a href="{{ path('app_view_' ~ tool.id) }}"{% if active_tool|default('') == tool.id %} aria-current="page"{% endif %}>{{ ('tools.' ~ tool.id)|trans }}</a>
+				{% endfor %}
+			</nav>
+		</header>
+
+		<main class="bench">
+			<div class="intro">
+				<h1>{% block header %}{% endblock %}</h1>
+				<p class="lead">{% block description %}{% endblock %}</p>
+			</div>
+			<section class="mat" aria-label="{{ 'mat.label'|trans }}">
+				<div class="ruler" aria-hidden="true">
+					{% for cm in range(0, 60, 5) %}<span>{{ cm }}</span>{% endfor %}
+				</div>
+				<div class="mat-surface">
+					{% block content %}{% endblock %}
+				</div>
+			</section>
+		</main>
+
+		{% include 'file/_footer.html.twig' %}
+
+		<tolemak-bar
+			app="file-actions"
+			home="https://kamil-galkowski.pl"
+			langs="pl,en"
+			data-label-file="{{ 'bar.file'|trans }}"
+			data-label-size="{{ 'bar.size'|trans }}"
+			data-label-dims="{{ 'bar.dims'|trans }}"
+			data-label-result="{{ 'bar.result'|trans }}"
+		>
+			<tolemak-field label="{{ 'bar.formats'|trans }}">JPG PNG GIF</tolemak-field>
+			<tolemak-field label="{{ 'bar.limit'|trans }}">5 MB</tolemak-field>
+		</tolemak-bar>
+
+		{% block javascripts_body %}
+			{{ vite_entry_script_tags('appmain') }}
+		{% endblock %}
+	</body>
+</html>

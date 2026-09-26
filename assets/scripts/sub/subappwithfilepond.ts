@@ -1,5 +1,6 @@
 import * as FilePond from 'filepond';
 import { SubApp } from "./subapp";
+import { clearFile, showFile } from '../bar.js';
 
 export type ProcessArgs = Parameters<FilePond.ProcessServerConfigFunction>;
 
@@ -31,6 +32,10 @@ export abstract class SubAppWithFilePond extends SubApp {
                 styleButtonRemoveItemPosition: 'left bottom',
                 styleButtonProcessItemPosition: 'right bottom',
                 instantUpload: false,
+                onaddfile: (error, item) => {
+                    if (!error) showFile(item.file as Blob & { name: string });
+                },
+                onremovefile: () => clearFile(),
                 server: {
                     process: this.processFile.bind(this),
                 }

@@ -1,9 +1,10 @@
 {% extends 'file/file_action.html.twig' %}
 
-{% block title_action %}{{ 'convert.title'|trans }}{% endblock %}
-{% block breadcrumb_action %}{{ 'convert.breadcrumb'|trans }}{% endblock %}
+{% set active_tool = 'convert' %}
 
+{% block title_action %}{{ 'convert.title'|trans }}{% endblock %}
 {% block header %}{{ 'convert.header'|trans }}{% endblock %}
+{% block description %}{{ 'convert.description'|trans }}{% endblock %}
 
 {% block stylesheets %}
 	{{ parent() }}
@@ -15,23 +16,15 @@
 	{{ vite_entry_script_tags('appconvert') }}
 {% endblock %}
 
-{% block description %}{{ 'convert.description'|trans }}{% endblock %}
-
-{% block content %}
-	<div class="row justify-content-center">
-		<div class="col-md-8 col-lg-6">
-			<input type="file" class="filepond mb-4" name="filepond" accept="image/png, image/jpeg, image/gif" data-drop-label='{{ ('common.drop_label'|trans)|raw }}' style="--fp-accent-color: #6c757d"/>
-			<div class="input-group mb-4">
-				<label class="input-group-text" for="dest-extension"><i class="fas fa-file-export me-2"></i>{{ 'convert.target_format'|trans }}</label>
-				<select class="form-select form-select-lg" id="dest-extension">
-					<option value="jpeg">JPEG</option>
-					<option value="png">PNG</option>
-					<option value="gif">GIF</option>
-				</select>
-			</div>
-			<div class="text-center">
-				<button class="btn btn-secondary btn-lg rounded-pill px-5 shadow-sm button-process"><i class="fas fa-exchange-alt me-2"></i>{{ 'convert.button'|trans }}</button>
-			</div>
-		</div>
+{% block sheet %}
+	<input type="file" class="filepond" name="filepond" accept="image/png, image/jpeg, image/gif" data-drop-label='{{ ('common.drop_label'|trans)|raw }}'/>
+	<div class="sheet-controls">
+		<label for="dest-extension">{{ 'convert.target_format'|trans }}</label>
+		<select id="dest-extension">
+			<option value="jpeg">JPEG</option>
+			<option value="png">PNG</option>
+			<option value="gif">GIF</option>
+		</select>
 	</div>
+	<button type="button" class="cut-button button-process">{{ 'convert.button'|trans }}</button>
 {% endblock %}

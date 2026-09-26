@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import { filenameFromContentDisposition } from './filename.js';
+import { showResult } from './bar.js';
 
 /** Matches both a native File and FilePond's looser ActualFileObject. */
 export type NamedBlob = Blob & { readonly name: string };
@@ -82,6 +83,7 @@ export async function processFileAction(
 
     const blob = await response.blob();
     load(String(response.status));
+    showResult(blob);
 
     return {
         blob,

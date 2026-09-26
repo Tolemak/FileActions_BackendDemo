@@ -55,7 +55,7 @@ class FileViewControllerTest extends WebTestCase
     /**
      * @dataProvider everyPageProvider
      */
-    public function testEveryPageLoadsTheThemeToggleScript(string $path): void
+    public function testEveryPageHasTheStatusBarAndItsScript(string $path): void
     {
         if (!is_file(dirname(__DIR__, 2) . '/public/build/.vite/entrypoints.json')) {
             $this->markTestSkipped('Frontend build missing, run `npm run build` first.');
@@ -64,7 +64,7 @@ class FileViewControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', $path);
 
-        $this->assertSelectorExists('#theme-toggle-btn');
+        $this->assertSelectorExists('tolemak-bar[langs="pl,en"]');
         $this->assertSelectorExists('script[type="module"][src*="/build/assets/appmain-"]');
     }
 
