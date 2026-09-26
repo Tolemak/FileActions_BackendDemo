@@ -109,10 +109,10 @@ class FileViewControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/file-view/main?_locale=pl');
-        $this->assertSelectorTextContains('h1', 'Witaj');
+        $this->assertSelectorTextContains('h1', 'Obróbka obrazów');
 
         $client->request('GET', '/file-view/main');
-        $this->assertSelectorTextContains('h1', 'Witaj');
+        $this->assertSelectorTextContains('h1', 'Obróbka obrazów');
     }
 
     public function testLocalePersistsOnNotFoundPage(): void
@@ -125,6 +125,6 @@ class FileViewControllerTest extends WebTestCase
         $client->request('GET', '/this-route-does-not-exist');
 
         $this->assertSame(404, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Nie znaleziono strony', (string) $client->getResponse()->getContent());
+        $this->assertStringContainsString('Nie ma takiej strony', (string) $client->getResponse()->getContent());
     }
 }
