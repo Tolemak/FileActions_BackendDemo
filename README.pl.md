@@ -1,100 +1,38 @@
-# File Actions Demo
+# FileActions
 
-*Dostępne również w: [English](README.md)*
+Wrzucasz obrazek, dostajesz go z powrotem przeskalowany, skonwertowany, skompresowany, obrócony albo w sepii. Symfony 7.4 + Imagick za małym API, frontend w TypeScript + FilePond, PL/EN. [file-actions.tolemak.pl](https://file-actions.tolemak.pl/)
 
-Backend Symfony 7.4 / PHP 8.3 wykonujący operacje na obrazach oparte na
-Imagick (zmiana rozmiaru, konwersja formatu, kompresja, obrót, filtr
-sepia) udostępnione jako niewielkie REST API, plus frontend na bazie
-Bootstrap + FilePond + TypeScript.
-
-## Stack
-
-- **Backend**: Symfony 7.4, PHP 8.3, Imagick (`ext-imagick`)
-- **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5,
-  Font Awesome (bundlowany przez Vite, nic nie jest ładowane z CDN)
-- **i18n**: `symfony/translation`, przełącznik języka trzymany w sesji (`en` / `pl`)
-- **Testy**: PHPUnit — testy jednostkowe `FileService`, testy funkcjonalne
-  każdego kontrolera (happy path + każda gałąź walidacji) przez `WebTestCase`;
-  Vitest dla helperów frontendu
-- **Kontenery**: `container/` zawiera obraz PHP 8.3 + Apache (Docker
-  Compose), domyślnie produkcyjny, Xdebug tylko w targecie `dev`
-
-Zainstalowane jest tylko to, co faktycznie jest używane: bez Doctrine, bez
-bundla Security, bez Messenger/Mailer/Notifier, bez asset-mapper/Stimulus —
-ta aplikacja nie ma bazy danych, autoryzacji ani zadań w tle, więc byłby to
-tylko martwy balast i niepotrzebna powierzchnia ataku.
-
-## Endpointy
-
-Wszystkie pod `/file`, przyjmują jeden przesłany obraz (`jpeg`/`png`/`gif`,
-≤5MB) przez `multipart/form-data`, zwracają przetworzony plik jako pobieranie
-binarne, nazwany jak przesłany plik (oczyszczona nazwa, rozszerzenie
-formatu wyjściowego):
-
-| Route | Metoda | Parametry |
-|---|---|---|
-| `/file/resize/{size}` | POST | `size`: 10–300 (% oryginału) |
-| `/file/convert/{extension}` | POST | `extension`: `jpeg`\|`png`\|`gif` |
-| `/file/compress/{ratio}` | POST | `ratio`: 1–100 (jakość) |
-| `/file/rotate/{degrees}` | POST | `degrees`: 0–360 |
-| `/file/sepia/{intensity}` | POST | `intensity`: 1–100 |
-
-Błędy wracają jako `400`/`500` z przetłumaczoną treścią tekstową (respektuje
-`?_locale=pl`, trzymane w sesji — zobacz `LocaleSubscriber`). Przeglądarkowe
-wersje każdej akcji są dostępne pod `/file-view/*`.
+[English version](README.md)
 
 ## Uruchomienie
-
-**Docker** — domyślnie budowany jest obraz produkcyjny (opcache,
-`display_errors=Off`, bez Xdebuga):
 
 ```bash
 cd container
 docker compose up -d --build
 docker compose exec web-server composer install
-npm install && npm run build   # na hoście — w kontenerze nie ma Node
+cd .. && npm install && npm run build
 ```
 
-Do pracy lokalnej dołóż `docker-compose.dev.yml`, który buduje target `dev`
-(Xdebug, `display_errors=On`):
+Aplikacja pod `http://localhost:40055`. Domyślny obraz jest produkcyjny; z Xdebugiem (port 9000, pasuje do `.vscode/launch.json`) trzeba dodać `-f docker-compose.yml -f docker-compose.dev.yml`.
 
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+Bez Dockera: PHP 8.3 z `ext-imagick`, potem `composer install`, `npm run build` i `php -S 127.0.0.1:8000 -t public`. `.env` domyślnie ma `prod`, dla profilera ustaw `APP_ENV=dev` w `.env.local`.
+
+## API
+
+Jeden obrazek (`jpeg`/`png`/`gif`, do 5 MB) jako `multipart/form-data`, wynik wraca jako plik do pobrania:
+
 ```
-
-Aplikacja dostępna pod `http://localhost:40055`, port wystawiony tylko na
-`127.0.0.1` (na serwerze stoi przed nią reverse proxy). Szczegóły konfiguracji
-Xdebug i inne informacje — w `container/README.md`.
-
-**Natywny PHP** — wymaga PHP 8.3+ z rozszerzeniem `imagick` i Composera:
-
-```bash
-composer install
-npm install && npm run build   # albo `npm run dev` dla serwera deweloperskiego Vite
-php -S 127.0.0.1:8000 -t public
+POST /file/resize/{size}          10-300 (%)
+POST /file/convert/{extension}    jpeg | png | gif
+POST /file/compress/{ratio}       1-100
+POST /file/rotate/{degrees}       0-360
+POST /file/sepia/{intensity}      1-100
 ```
-
-`composer install` tworzy `.env` z `.env.example`, który domyślnie ustawia
-`prod`. Ustaw `APP_ENV=dev` i `APP_DEBUG=1` w `.env.local`, żeby mieć
-profiler, toolbar i czytelne strony błędów.
 
 ## Testy
 
 ```bash
-npm run build   # testy stron sprawdzają zbudowane entrypointy Vite
+npm run build     # testy stron potrzebują zbudowanych assetów
 php bin/phpunit
 npm test
 ```
-
-## Struktura
-
-- `src/Controller/FileController.php` — API, po jednej akcji na operację,
-  wspólna walidacja uploadu w `resolveFile()`
-- `src/Http/DownloadFilename.php` — buduje nazwę do `Content-Disposition`
-  z nazwy pliku klienta (bez ścieżek, znaków sterujących i sztuczek z nagłówkami)
-- `src/Service/FileService.php` — właściwe wywołania Imagick, oddzielone od
-  warstwy HTTP, dzięki czemu da się je testować jednostkowo bez uruchamiania kernela
-- `src/EventSubscriber/LocaleSubscriber.php` — czyta `?_locale`, zapisuje je
-  do sesji, działa przed routingiem, więc obowiązuje też na stronie 404
-- `translations/messages.{en,pl}.yaml` — wszystkie teksty widoczne dla
-  użytkownika, łącznie z komunikatami błędów backendu

@@ -1,99 +1,38 @@
-# File Actions Demo
+# FileActions
 
-*Read this in other languages: [Polski](README.pl.md)*
+Upload an image, get it back resized, converted, compressed, rotated or in sepia. Symfony 7.4 + Imagick behind a small API, with a TypeScript + FilePond frontend, PL/EN. [file-actions.tolemak.pl](https://file-actions.tolemak.pl/)
 
-Symfony 7.4 / PHP 8.3 backend that runs Imagick-backed image operations
-(resize, format conversion, compression, rotation, sepia tone) behind a
-small REST API, with a Bootstrap + FilePond + TypeScript frontend on top.
+[Polska wersja](README.pl.md)
 
-## Stack
-
-- **Backend**: Symfony 7.4, PHP 8.3, Imagick (`ext-imagick`)
-- **Frontend**: TypeScript, Twig, Vite, FilePond, SweetAlert2, Bootstrap 5,
-  Font Awesome (bundled by Vite, nothing loaded from a CDN)
-- **i18n**: `symfony/translation`, session-sticky locale switch (`en` / `pl`)
-- **Tests**: PHPUnit — unit tests on `FileService`, functional tests on every
-  controller (happy path + every validation branch) via `WebTestCase`;
-  Vitest for the frontend helpers
-- **Containers**: `container/` ships a PHP 8.3 + Apache image (Docker
-  Compose), production by default, Xdebug only in the `dev` target
-
-Only what's actually used is installed: no Doctrine, no Security bundle,
-no Messenger/Mailer/Notifier, no asset-mapper/Stimulus — this app has no
-database, no auth, and no background jobs, so those would just be dead
-weight and attack surface.
-
-## Endpoints
-
-All under `/file`, accept a single uploaded image (`jpeg`/`png`/`gif`,
-≤5MB) via `multipart/form-data`, return the processed file as a binary
-download named after the uploaded file (sanitized, with the extension of
-the output format):
-
-| Route | Method | Params |
-|---|---|---|
-| `/file/resize/{size}` | POST | `size`: 10–300 (% of original) |
-| `/file/convert/{extension}` | POST | `extension`: `jpeg`\|`png`\|`gif` |
-| `/file/compress/{ratio}` | POST | `ratio`: 1–100 (quality) |
-| `/file/rotate/{degrees}` | POST | `degrees`: 0–360 |
-| `/file/sepia/{intensity}` | POST | `intensity`: 1–100 |
-
-Errors come back as `400`/`500` with a translated plain-text body
-(honors `?_locale=pl`, sticky per session — see `LocaleSubscriber`).
-Browsable versions of each action live under `/file-view/*`.
-
-## Running it
-
-**Docker** — the default build is the production image (opcache,
-`display_errors=Off`, no Xdebug):
+## Running
 
 ```bash
 cd container
 docker compose up -d --build
 docker compose exec web-server composer install
-npm install && npm run build   # on the host — no Node in the container
+cd .. && npm install && npm run build
 ```
 
-For development add `docker-compose.dev.yml`, which builds the `dev` target
-(Xdebug, `display_errors=On`):
+App on `http://localhost:40055`. The default image is production; for Xdebug (port 9000, matches `.vscode/launch.json`) add `-f docker-compose.yml -f docker-compose.dev.yml`.
 
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+Without Docker: PHP 8.3 with `ext-imagick`, then `composer install`, `npm run build` and `php -S 127.0.0.1:8000 -t public`. `.env` defaults to `prod`, set `APP_ENV=dev` in `.env.local` for the profiler.
+
+## API
+
+A single image (`jpeg`/`png`/`gif`, up to 5 MB) as `multipart/form-data`, the processed file comes back as a download:
+
 ```
-
-App is served at `http://localhost:40055`, published on `127.0.0.1` only
-(on the server a reverse proxy sits in front). See `container/README.md` for
-Xdebug setup and other details.
-
-**Native PHP** — needs PHP 8.3+ with the `imagick` extension and Composer:
-
-```bash
-composer install
-npm install && npm run build   # or `npm run dev` for a Vite dev server
-php -S 127.0.0.1:8000 -t public
+POST /file/resize/{size}          10-300 (%)
+POST /file/convert/{extension}    jpeg | png | gif
+POST /file/compress/{ratio}       1-100
+POST /file/rotate/{degrees}       0-360
+POST /file/sepia/{intensity}      1-100
 ```
-
-`composer install` creates `.env` from `.env.example`, which defaults to
-`prod`. Set `APP_ENV=dev` and `APP_DEBUG=1` in `.env.local` for the
-profiler/toolbar and readable error pages.
 
 ## Tests
 
 ```bash
-npm run build   # the page tests check the built Vite entrypoints
+npm run build     # page tests need the built assets
 php bin/phpunit
 npm test
 ```
-
-## Layout
-
-- `src/Controller/FileController.php` — the API, one action per operation,
-  shared upload validation in `resolveFile()`
-- `src/Http/DownloadFilename.php` — builds the `Content-Disposition` name
-  from the client filename (no paths, control characters or header tricks)
-- `src/Service/FileService.php` — the actual Imagick calls, kept separate
-  from HTTP concerns so it's unit-testable without booting the kernel
-- `src/EventSubscriber/LocaleSubscriber.php` — reads `?_locale`, persists
-  it to the session, runs ahead of routing so it still applies on a 404
-- `translations/messages.{en,pl}.yaml` — every user-facing string, backend
-  error messages included
