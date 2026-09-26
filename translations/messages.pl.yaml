@@ -1,96 +1,92 @@
 nav:
-    home: Strona główna
-    lang_pl: PL
-    lang_en: EN
-    toggle_theme: Przełącz tryb jasny/ciemny
+    tools: Narzędzia
+
+tools:
+    resize: Zmień rozmiar
+    convert: Konwertuj
+    compress: Kompresuj
+    rotate: Obróć
+    sepia: Sepia
+
+mat:
+    label: Mata robocza
+
+bar:
+    formats: formaty
+    limit: limit
+    file: plik
+    size: rozmiar
+    dims: wymiary
+    result: wynik
 
 common:
     cancel: Anuluj
     cancelled_title: Anulowano
-    cancelled_text: Anulowano
-    back_home: Wróć na stronę główną
-    drop_label: "Przeciągnij i upuść obraz tutaj, albo <span class=\"filepond--label-action\">wybierz plik</span>"
+    cancelled_text: Plik nie został przetworzony.
+    back_home: Wróć do narzędzi
+    drop_label: "Upuść tu obraz albo <span class=\"filepond--label-action\">wybierz plik</span>"
 
 home:
-    title: File Actions Demo - Strona główna
-    heading: Witaj w File Actions Demo!
-    lead: "Twoje jedno miejsce do szybkiej i wygodnej obróbki plików. Zmieniaj rozmiar, format, kompresję i wiele więcej w kilka kliknięć!"
+    title: File Actions
+    heading: Obróbka obrazów na serwerze
+    lead: Wgraj JPG, PNG albo GIF do 5 MB, wybierz narzędzie, a serwer odeśle gotowy plik.
     card:
         resize:
-            title: Zmiana rozmiaru
-            text: Dopasuj wymiary obrazu do swoich potrzeb.
-            button: Przejdź do zmiany rozmiaru
+            text: Zmniejsz albo powiększ obraz procentowo.
         convert:
-            title: Konwersja formatu
-            text: Zmień format między JPG, PNG, GIF itd.
-            button: Przejdź do konwersji
+            text: Zapisz obraz w innym formacie.
         compress:
-            title: Kompresja plików
-            text: Zmniejsz rozmiar pliku bez utraty jakości.
-            button: Przejdź do kompresji
+            text: Zmniejsz wagę pliku kosztem jakości.
         rotate:
-            title: Obrót obrazu
-            text: Obróć obraz o dowolny kąt.
-            button: Przejdź do obrotu
+            text: Obróć obraz o wybrany kąt.
         sepia:
-            title: Filtr sepia
-            text: Nadaj zdjęciom ciepły, retro odcień.
-            button: Przejdź do sepii
-        next:
-            title: Kolejna funkcja
-            text: Już wkrótce!
-            button: Niedostępne
+            text: Nadaj zdjęciu ciepły, brązowy odcień.
 
 resize:
-    title: Zmiana rozmiaru obrazu
-    breadcrumb: Zmiana rozmiaru
+    title: Zmiana rozmiaru
     header: Zmień rozmiar obrazu
-    description: Wgraj obraz i łatwo dopasuj jego rozmiar. Wybierz plik, a resztą zajmie się serwer!
+    description: Wgraj obraz, a po kliknięciu przycisku wybierz nowy rozmiar w procentach oryginału (10–300%).
     button: Zmień rozmiar
-    prompt_title: Wybierz rozmiar?
+    prompt_title: Nowy rozmiar w % oryginału
 
 convert:
-    title: Konwersja formatu obrazu
-    breadcrumb: Konwersja
-    header: Konwertuj format obrazu
-    description: Wgraj obraz i bezproblemowo zmień jego format. Wybierz docelowy format poniżej.
-    target_format: Docelowy format
-    button: Konwertuj format
+    title: Konwersja formatu
+    header: Zmień format obrazu
+    description: Wgraj obraz i wybierz format, w jakim serwer ma go zapisać.
+    target_format: Format docelowy
+    button: Konwertuj
 
 compress:
-    title: Kompresja obrazu
-    breadcrumb: Kompresja
+    title: Kompresja
     header: Skompresuj obraz
-    description: Wgraj obraz i zmniejsz jego rozmiar. Zoptymalizowane pod kątem jakości i wydajności.
-    button: Skompresuj obraz
-    prompt_title: Wybierz poziom kompresji?
+    description: Wgraj obraz i wybierz poziom kompresji od 1 do 100. Wyższy poziom daje mniejszy plik i niższą jakość.
+    button: Skompresuj
+    prompt_title: Poziom kompresji (1–100)
 
 rotate:
-    title: Obrót obrazu
-    breadcrumb: Obrót
-    header: Obróć swój obraz
-    description: Wgraj obraz i obróć go o dowolny kąt od 0 do 360 stopni.
-    button: Obróć obraz
-    prompt_title: Wybierz kąt obrotu?
+    title: Obrót
+    header: Obróć obraz
+    description: Wgraj obraz i wybierz kąt obrotu od 0 do 360 stopni.
+    button: Obróć
+    prompt_title: Kąt obrotu w stopniach
 
 sepia:
     title: Filtr sepia
-    breadcrumb: Sepia
-    header: Zastosuj filtr sepia
-    description: Wgraj obraz i nadaj mu ciepły, retro odcień sepii.
-    button: Zastosuj filtr sepia
-    prompt_title: Wybierz intensywność sepii?
+    header: Nałóż filtr sepia
+    description: Wgraj obraz i wybierz intensywność sepii od 1 do 100.
+    button: Nałóż sepię
+    prompt_title: Intensywność sepii (1–100)
 
 error:
     "404":
-        header: 404 - Nie znaleziono strony
-        description: Strona, której szukasz, nie istnieje lub została przeniesiona.
-        text: Ups! Nie znaleziono tej strony.
-        subtext: Wygląda na to, że pod tym adresem nic nie ma.
+        header: Nie ma takiej strony
+        description: Adres jest błędny albo strona została przeniesiona.
+        text: Pod tym adresem nic nie leży na macie.
+        subtext: Wybierz narzędzie z listy u góry.
     generic:
         header: Coś poszło nie tak
-        description: Wystąpił nieoczekiwany błąd podczas przetwarzania żądania.
-        text: Ups! Coś poszło nie tak po naszej stronie.
+        description: Serwer nie dokończył żądania.
+        text: Wystąpił nieoczekiwany błąd.
         subtext: Spróbuj ponownie za chwilę.
     file_not_found: Nie znaleziono pliku
     invalid_file_type: Plik musi być w formacie JPEG, PNG lub GIF
@@ -108,7 +104,6 @@ error:
     sepia_failed: Nie udało się nałożyć filtru sepia. Spróbuj ponownie.
 
 footer:
-    portfolio: portfolio
     source: Kod na GitHubie
 
 js:
