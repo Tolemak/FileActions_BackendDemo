@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "ext-imagick": "*",
         "pentatrion/vite-bundle": "^8.2.4",
+        "sentry/sentry-symfony": "^5.13",
         "symfony/asset": "7.4.*",
         "symfony/console": "7.4.*",
         "symfony/dotenv": "7.4.*",
