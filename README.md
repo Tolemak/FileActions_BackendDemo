@@ -17,6 +17,8 @@ App on `http://localhost:40055`. The default image is production; for Xdebug (po
 
 Without Docker: PHP 8.3 with `ext-imagick`, then `composer install`, `npm run build` and `php -S 127.0.0.1:8000 -t public`. `.env` defaults to `prod`, set `APP_ENV=dev` in `.env.local` for the profiler.
 
+Production image: after the checks pass on `master`, CI builds the whole runtime in `container/Dockerfile.app` (Composer `vendor`, Vite assets, Apache on port 8080 as a non-root user), pushes it as `ghcr.io/tolemak/fileactions-app:<commit sha>` (and `:latest`) and attaches a signed build provenance attestation. The server pulls the image and verifies the attestation itself; CI never connects to it.
+
 ## API
 
 A single image (`jpeg`/`png`/`gif`, up to 5 MB) as `multipart/form-data`, the processed file comes back as a download:
