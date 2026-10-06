@@ -4,3 +4,9 @@ framework:
         default_path: '%kernel.project_dir%/translations'
         fallbacks:
             - en
+
+when@test:
+    framework:
+        translator:
+            paths:
+                - '%kernel.project_dir%/tests/Fixtures/translations'

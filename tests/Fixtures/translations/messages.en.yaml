@@ -1,0 +1,16 @@
+tools:
+    grayscale: Grayscale
+
+home:
+    card:
+        grayscale:
+            text: Drop the colour.
+
+grayscale:
+    title: Grayscale
+    header: Make an image grayscale
+    description: Upload an image and get it back without colour.
+    button: Make grayscale
+
+error:
+    grayscale_failed: Could not make the file grayscale. Please try again.

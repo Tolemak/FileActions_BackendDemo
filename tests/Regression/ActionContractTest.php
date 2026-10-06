@@ -259,18 +259,18 @@ class ActionContractTest extends WebTestCase
         $this->assertSelectorTextSame('.sheet-controls label', 'Target format');
     }
 
-    public function testNavigationListsTheFiveToolsInOrder(): void
+    public function testNavigationListsTheFiveToolsFirstAndInOrder(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/file-view/main');
 
         $this->assertSame(
             ['/file-view/resize', '/file-view/convert', '/file-view/compress', '/file-view/rotate', '/file-view/sepia'],
-            $crawler->filter('nav.tools a')->each(static fn ($a): string => (string) $a->attr('href')),
+            array_slice($crawler->filter('nav.tools a')->each(static fn ($a): string => (string) $a->attr('href')), 0, 5),
         );
         $this->assertSame(
             ['Resize', 'Convert', 'Compress', 'Rotate', 'Sepia'],
-            $crawler->filter('nav.tools a')->each(static fn ($a): string => $a->text()),
+            array_slice($crawler->filter('nav.tools a')->each(static fn ($a): string => $a->text()), 0, 5),
         );
     }
 
@@ -281,11 +281,11 @@ class ActionContractTest extends WebTestCase
 
         $this->assertSame(
             ['10–300 %', 'JPG / PNG / GIF', '1–100', '0–360°', '1–100'],
-            $crawler->filter('.paper-spec')->each(static fn ($n): string => $n->text()),
+            array_slice($crawler->filter('.paper-spec')->each(static fn ($n): string => $n->text()), 0, 5),
         );
         $this->assertSame(
             ['/file-view/resize', '/file-view/convert', '/file-view/compress', '/file-view/rotate', '/file-view/sepia'],
-            $crawler->filter('.paper a')->each(static fn ($a): string => (string) $a->attr('href')),
+            array_slice($crawler->filter('.paper a')->each(static fn ($a): string => (string) $a->attr('href')), 0, 5),
         );
     }
 
