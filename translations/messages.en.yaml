@@ -53,7 +53,7 @@ convert:
     title: Convert
     header: Change the image format
     description: Upload an image and choose the format the server should save it in.
-    target_format: Target format
+    option_label: Target format
     button: Convert
 
 compress:
@@ -92,15 +92,15 @@ error:
     invalid_file_type: File must be a JPEG, PNG or GIF
     file_too_large: File size must be less than 5MB
     image_too_large: Image dimensions are too large to process
-    resize_invalid_size: Size must be between 10 and 300
+    resize_invalid: Size must be between 10 and 300
     resize_failed: Could not resize the file. Please try again.
-    convert_invalid_extension: Extension must be jpeg, png or gif
+    convert_invalid: Extension must be jpeg, png or gif
     convert_failed: Could not convert the file. Please try again.
-    compress_invalid_ratio: Compress ratio must be between 1 and 100
+    compress_invalid: Compress ratio must be between 1 and 100
     compress_failed: Could not compress the file. Please try again.
-    rotate_invalid_degrees: Degrees must be between 0 and 360
+    rotate_invalid: Degrees must be between 0 and 360
     rotate_failed: Could not rotate the file. Please try again.
-    sepia_invalid_intensity: Intensity must be between 1 and 100
+    sepia_invalid: Intensity must be between 1 and 100
     sepia_failed: Could not apply the sepia filter. Please try again.
 
 footer:
