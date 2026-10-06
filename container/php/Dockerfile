@@ -5,18 +5,27 @@ FROM php:8.3-apache AS base
 # without listing them explicitly the purge below removes them and imagick
 # fails to load at runtime.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        $PHPIZE_DEPS \
-        libmagickwand-dev \
         libmagickwand-7.q16-10 \
         libgomp1 \
         libzip-dev \
         unzip \
-    && pecl install imagick \
-    && docker-php-ext-enable imagick \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        $PHPIZE_DEPS \
     && docker-php-ext-install -j"$(nproc)" opcache zip \
     && apt-get purge -y --auto-remove $PHPIZE_DEPS \
-    && rm -rf /var/lib/apt/lists/* \
-    && a2enmod rewrite \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        $PHPIZE_DEPS \
+        libmagickwand-dev \
+    && MAKEFLAGS="-j$(nproc)" pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod rewrite \
     && mkdir -p /var/www/site \
     && chown -R www-data:www-data /var/www/site
 
