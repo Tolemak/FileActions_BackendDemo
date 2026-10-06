@@ -1,12 +1,4 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><rect width=%2216%22 height=%2216%22 rx=%223%22 fill=%22%232e6a50%22/><path d=%22M3 13L13 3%22 stroke=%22%23f3d34a%22 stroke-width=%222%22/></svg>">
-<script>
-	(function () {
-		var stored = localStorage.getItem('theme');
-		var theme = (stored === 'light' || stored === 'dark')
-			? stored
-			: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-		document.documentElement.setAttribute('data-theme', theme);
-	})();
-</script>
+<script src="/theme-init.js"></script>

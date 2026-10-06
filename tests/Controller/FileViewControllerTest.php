@@ -30,6 +30,36 @@ class FileViewControllerTest extends WebTestCase
         yield 'sepia' => ['/file-view/sepia'];
     }
 
+    public function testResponsesCarrySecurityHeaders(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/file-view/main');
+
+        $headers = $client->getResponse()->headers;
+        $csp = (string) $headers->get('Content-Security-Policy');
+        $this->assertStringContainsString("default-src 'self'", $csp);
+        $this->assertStringContainsString("script-src 'self';", $csp);
+        $this->assertStringContainsString("style-src 'self';", $csp);
+        $this->assertStringContainsString("frame-ancestors 'none'", $csp);
+        $this->assertStringNotContainsString('unsafe-inline', $csp);
+        $this->assertSame('max-age=31536000', $headers->get('Strict-Transport-Security'));
+        $this->assertSame('nosniff', $headers->get('X-Content-Type-Options'));
+        $this->assertSame('DENY', $headers->get('X-Frame-Options'));
+        $this->assertSame('strict-origin-when-cross-origin', $headers->get('Referrer-Policy'));
+        $this->assertSame('camera=(), microphone=(), geolocation=()', $headers->get('Permissions-Policy'));
+    }
+
+    public function testPagesHaveNoInlineScriptsOrStyles(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/file-view/resize');
+
+        $html = (string) $client->getResponse()->getContent();
+        $this->assertSelectorNotExists('script:not([src])');
+        $this->assertSelectorNotExists('style');
+        $this->assertDoesNotMatchRegularExpression('/\sstyle=/i', $html);
+    }
+
     public function testMainPageLinksToRotateAndSepia(): void
     {
         $client = static::createClient();
