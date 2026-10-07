@@ -24,6 +24,7 @@ jobs:
       cs-tool: none
       env: APP_ENV=test
       node-version: "22"
+      node-scripts: lint typecheck test build
 
   image:
     needs: ci

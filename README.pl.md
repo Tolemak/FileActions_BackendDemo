@@ -38,3 +38,5 @@ npm run build     # testy stron potrzebują zbudowanych assetów
 php bin/phpunit
 npm test
 ```
+
+TypeScript 7 czeka na wsparcie w typescript-eslint, więc Dependabot pomija większe aktualizacje TypeScripta do tego czasu.
