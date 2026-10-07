@@ -17,6 +17,8 @@ Aplikacja pod `http://localhost:40055`. Domyślny obraz jest produkcyjny; z Xdeb
 
 Bez Dockera: PHP 8.3 z `ext-imagick`, potem `composer install`, `npm run build` i `php -S 127.0.0.1:8000 -t public`. `.env` domyślnie ma `prod`, dla profilera ustaw `APP_ENV=dev` w `.env.local`.
 
+Obraz produkcyjny: po zielonych testach na `master` CI buduje cały runtime z `container/Dockerfile.app` (`vendor` z Composera, assety Vite, Apache na porcie 8080 bez roota), wypycha go jako `ghcr.io/tolemak/fileactions-app:<sha commita>` (i `:latest`) i dołącza podpisane poświadczenie pochodzenia builda. Serwer sam pobiera obraz i weryfikuje poświadczenie; CI nigdy się z nim nie łączy.
+
 ## API
 
 Jeden obrazek (`jpeg`/`png`/`gif`, do 5 MB) jako `multipart/form-data`, wynik wraca jako plik do pobrania:
