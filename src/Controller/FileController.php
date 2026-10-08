@@ -83,6 +83,14 @@ final class FileController extends AbstractController
             return new Response($this->translator->trans('error.file_not_found'), Response::HTTP_BAD_REQUEST);
         }
 
+        if (in_array($file->getError(), [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+            return new Response($this->translator->trans('error.file_too_large'), Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!$file->isValid()) {
+            return new Response($this->translator->trans('error.file_not_found'), Response::HTTP_BAD_REQUEST);
+        }
+
         if (ExtensionToConvert::fromMimeType((string) $file->getMimeType()) === null) {
             return new Response($this->translator->trans('error.invalid_file_type'), Response::HTTP_BAD_REQUEST);
         }
