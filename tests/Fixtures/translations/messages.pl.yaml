@@ -1,0 +1,16 @@
+tools:
+    grayscale: Skala szarości
+
+home:
+    card:
+        grayscale:
+            text: Odbierz obrazowi kolor.
+
+grayscale:
+    title: Skala szarości
+    header: Zamień obraz na skalę szarości
+    description: Wgraj obraz i odbierz go bez koloru.
+    button: Zamień
+
+error:
+    grayscale_failed: Nie udało się zamienić pliku na skalę szarości. Spróbuj ponownie.

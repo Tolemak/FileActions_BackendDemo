@@ -2,7 +2,12 @@
 
 namespace App\Tests\Service;
 
-use App\Enum\ExtensionToConvert;
+use App\Action\CompressAction;
+use App\Action\ConvertAction;
+use App\Action\FileAction;
+use App\Action\ResizeAction;
+use App\Action\RotateAction;
+use App\Action\SepiaAction;
 use App\Service\FileService;
 use Imagick;
 use PHPUnit\Framework\TestCase;
@@ -41,12 +46,19 @@ class FileServiceTest extends TestCase
         return new UploadedFile($path, 'sample.' . $extension, 'image/' . $extension, null, true);
     }
 
+    private function processWith(UploadedFile $file, FileAction $action, int|string $value): string
+    {
+        $resultPath = $this->fileService->process($file, static fn (Imagick $image) => $action->process($image, $value));
+        $this->tempFiles[] = $resultPath;
+
+        return $resultPath;
+    }
+
     public function testResizeScalesImageDimensions(): void
     {
         $file = $this->createUploadedImage(width: 100, height: 50);
 
-        $resultPath = $this->fileService->resize($file, 50);
-        $this->tempFiles[] = $resultPath;
+        $resultPath = $this->processWith($file, new ResizeAction(), 50);
 
         $result = new Imagick($resultPath);
         $this->assertSame(50, $result->getImageWidth());
@@ -57,8 +69,7 @@ class FileServiceTest extends TestCase
     {
         $file = $this->createUploadedImage('png');
 
-        $resultPath = $this->fileService->changeExtension($file, ExtensionToConvert::JPEG);
-        $this->tempFiles[] = $resultPath;
+        $resultPath = $this->processWith($file, new ConvertAction(), 'jpeg');
 
         $result = new Imagick($resultPath);
         $this->assertSame('JPEG', $result->getImageFormat());
@@ -68,8 +79,7 @@ class FileServiceTest extends TestCase
     {
         $file = $this->createUploadedImage('jpeg');
 
-        $resultPath = $this->fileService->compress($file, 30);
-        $this->tempFiles[] = $resultPath;
+        $resultPath = $this->processWith($file, new CompressAction(), 30);
 
         $result = new Imagick($resultPath);
         $this->assertSame(30, $result->getImageCompressionQuality());
@@ -79,8 +89,7 @@ class FileServiceTest extends TestCase
     {
         $file = $this->createUploadedImage(width: 40, height: 20);
 
-        $resultPath = $this->fileService->rotate($file, 90);
-        $this->tempFiles[] = $resultPath;
+        $resultPath = $this->processWith($file, new RotateAction(), 90);
 
         $result = new Imagick($resultPath);
         $this->assertSame(20, $result->getImageWidth());
@@ -91,8 +100,7 @@ class FileServiceTest extends TestCase
     {
         $file = $this->createUploadedImage(width: 40, height: 20);
 
-        $resultPath = $this->fileService->rotate($file, 360);
-        $this->tempFiles[] = $resultPath;
+        $resultPath = $this->processWith($file, new RotateAction(), 360);
 
         $result = new Imagick($resultPath);
         $this->assertSame(40, $result->getImageWidth());
@@ -103,8 +111,7 @@ class FileServiceTest extends TestCase
     {
         $file = $this->createUploadedImage(width: 10, height: 10, color: 'blue');
 
-        $resultPath = $this->fileService->applySepiaTone($file, 80);
-        $this->tempFiles[] = $resultPath;
+        $resultPath = $this->processWith($file, new SepiaAction(), 80);
 
         $result = new Imagick($resultPath);
         $pixel = $result->getImagePixelColor(0, 0)->getColor();

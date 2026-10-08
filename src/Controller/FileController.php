@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Action\ActionRegistry;
+use App\Action\ChangesOutputFormat;
 use App\Enum\ExtensionToConvert;
 use App\Exception\ImageTooLargeException;
 use App\Exception\InvalidImageException;
@@ -25,117 +27,48 @@ final class FileController extends AbstractController
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
+        private readonly ActionRegistry $registry,
     ) {
     }
 
-    #[Route('/resize/{size}', requirements: ['size' => '\d+'], name: 'resize', methods: ['POST'])]
-    public function resizeAction(Request $request, FileServiceInterface $fileService, int $size): Response
+    #[Route(
+        '/{action}/{value}',
+        name: 'process',
+        requirements: ['action' => '[a-z0-9-]+', 'value' => '[^/]+'],
+        defaults: ['value' => null],
+        methods: ['POST'],
+    )]
+    public function process(Request $request, FileServiceInterface $fileService, string $action, ?string $value): Response
     {
+        $fileAction = $this->registry->find($action) ?? throw $this->createNotFoundException();
+        $option = $fileAction->option();
+
+        if ($option === null ? $value !== null : ($value === null || !$option->isRoutable($value))) {
+            throw $this->createNotFoundException();
+        }
+
         $file = $this->resolveFile($request);
         if ($file instanceof Response) {
             return $file;
         }
 
-        $error = $this->validateRange($size, 10, 300, 'error.resize_invalid_size');
-        if ($error !== null) {
-            return $error;
+        $normalized = null;
+        if ($option !== null && $value !== null) {
+            if (!$option->isValid($value)) {
+                return new Response($this->translator->trans('error.' . $action . '_invalid'), Response::HTTP_BAD_REQUEST);
+            }
+            $normalized = $option->normalize($value);
         }
 
         return $this->respondWithProcessedFile(
-            static fn (): string => $fileService->resize($file, $size),
+            static fn (): string => $fileService->process(
+                $file,
+                static fn (\Imagick $image) => $fileAction->process($image, $normalized),
+            ),
             $file,
-            'error.resize_failed',
+            'error.' . $action . '_failed',
+            $fileAction instanceof ChangesOutputFormat && is_string($normalized) ? $fileAction->outputFormat($normalized) : null,
         );
-    }
-
-    #[Route('/convert/{extension}', name: 'convert', methods: ['POST'])]
-    public function convertAction(Request $request, FileServiceInterface $fileService, string $extension): Response
-    {
-        $file = $this->resolveFile($request);
-        if ($file instanceof Response) {
-            return $file;
-        }
-
-        $targetExtension = ExtensionToConvert::tryFrom($extension);
-        if ($targetExtension === null) {
-            return new Response($this->translator->trans('error.convert_invalid_extension'), Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->respondWithProcessedFile(
-            static fn (): string => $fileService->changeExtension($file, $targetExtension),
-            $file,
-            'error.convert_failed',
-            $targetExtension,
-        );
-    }
-
-    #[Route('/compress/{ratio}', requirements: ['ratio' => '\d+'], name: 'compress', methods: ['POST'])]
-    public function compressAction(Request $request, FileServiceInterface $fileService, int $ratio): Response
-    {
-        $file = $this->resolveFile($request);
-        if ($file instanceof Response) {
-            return $file;
-        }
-
-        $error = $this->validateRange($ratio, 1, 100, 'error.compress_invalid_ratio');
-        if ($error !== null) {
-            return $error;
-        }
-
-        return $this->respondWithProcessedFile(
-            static fn (): string => $fileService->compress($file, $ratio),
-            $file,
-            'error.compress_failed',
-        );
-    }
-
-    #[Route('/rotate/{degrees}', requirements: ['degrees' => '\d+'], name: 'rotate', methods: ['POST'])]
-    public function rotateAction(Request $request, FileServiceInterface $fileService, int $degrees): Response
-    {
-        $file = $this->resolveFile($request);
-        if ($file instanceof Response) {
-            return $file;
-        }
-
-        $error = $this->validateRange($degrees, 0, 360, 'error.rotate_invalid_degrees');
-        if ($error !== null) {
-            return $error;
-        }
-
-        return $this->respondWithProcessedFile(
-            static fn (): string => $fileService->rotate($file, $degrees),
-            $file,
-            'error.rotate_failed',
-        );
-    }
-
-    #[Route('/sepia/{intensity}', requirements: ['intensity' => '\d+'], name: 'sepia', methods: ['POST'])]
-    public function sepiaAction(Request $request, FileServiceInterface $fileService, int $intensity): Response
-    {
-        $file = $this->resolveFile($request);
-        if ($file instanceof Response) {
-            return $file;
-        }
-
-        $error = $this->validateRange($intensity, 1, 100, 'error.sepia_invalid_intensity');
-        if ($error !== null) {
-            return $error;
-        }
-
-        return $this->respondWithProcessedFile(
-            static fn (): string => $fileService->applySepiaTone($file, $intensity),
-            $file,
-            'error.sepia_failed',
-        );
-    }
-
-    private function validateRange(int $value, int $min, int $max, string $errorKey): ?Response
-    {
-        if ($value < $min || $value > $max) {
-            return new Response($this->translator->trans($errorKey), Response::HTTP_BAD_REQUEST);
-        }
-
-        return null;
     }
 
     /**
@@ -147,6 +80,14 @@ final class FileController extends AbstractController
         $file = array_values($request->files->all())[0] ?? null;
 
         if (!$file instanceof UploadedFile) {
+            return new Response($this->translator->trans('error.file_not_found'), Response::HTTP_BAD_REQUEST);
+        }
+
+        if (in_array($file->getError(), [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+            return new Response($this->translator->trans('error.file_too_large'), Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!$file->isValid()) {
             return new Response($this->translator->trans('error.file_not_found'), Response::HTTP_BAD_REQUEST);
         }
 

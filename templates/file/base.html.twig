@@ -1,10 +1,4 @@
-{% set tools = [
-	{id: 'resize', spec: '10–300 %'},
-	{id: 'convert', spec: 'JPG / PNG / GIF'},
-	{id: 'compress', spec: '1–100'},
-	{id: 'rotate', spec: '0–360°'},
-	{id: 'sepia', spec: '1–100'},
-] %}
+{% set tools = file_actions.all %}
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
 	<head>
@@ -25,7 +19,7 @@
 			<a class="wordmark" href="{{ path('app_view_main') }}">File Actions</a>
 			<nav class="tools" aria-label="{{ 'nav.tools'|trans }}">
 				{% for tool in tools %}
-					<a href="{{ path('app_view_' ~ tool.id) }}"{% if active_tool|default('') == tool.id %} aria-current="page"{% endif %}>{{ ('tools.' ~ tool.id)|trans }}</a>
+					<a href="{{ path('app_view_action', {action: tool.name}) }}"{% if active_tool|default('') == tool.name %} aria-current="page"{% endif %}>{{ ('tools.' ~ tool.name)|trans }}</a>
 				{% endfor %}
 			</nav>
 		</header>
