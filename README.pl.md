@@ -31,6 +31,8 @@ POST /file/rotate/{degrees}       0-360
 POST /file/sepia/{intensity}      1-100
 ```
 
+Obrazy powyżej 24 megapikseli są odrzucane (`PixelBudget::MAX_PIXELS`): plik 5 MB może się zdekodować do setek megapikseli, więc wymiary są czytane z nagłówka przed dekodowaniem. Przy 8 bajtach na piksel (Q16) mieści się to z zapasem w limicie pamięci Imagick 256 MB ustawionym w `FileService`.
+
 ## Dodawanie akcji
 
 Akcja to jedna klasa PHP w `src/Action/` implementująca `App\Action\FileAction`. Symfony nadaje jej tag `app.file_action` przez autokonfigurację, a reszta jest generyczna: trasa `POST /file/{action}[/{value}]`, strona `/file-view/{action}`, pozycja w nawigacji, karta na stronie głównej i jedna aplikacja TypeScript, która czyta schemat opcji z atrybutów `data-*`.

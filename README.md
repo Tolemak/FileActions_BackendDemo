@@ -31,6 +31,8 @@ POST /file/rotate/{degrees}       0-360
 POST /file/sepia/{intensity}      1-100
 ```
 
+Images are rejected above 24 megapixels (`PixelBudget::MAX_PIXELS`): a 5 MB upload can still decode to hundreds of megapixels, so dimensions are read from the header before decoding. At 8 bytes per pixel (Q16) this stays well under the 256 MB Imagick memory limit set in `FileService`.
+
 ## Adding an action
 
 An action is one PHP class in `src/Action/` that implements `App\Action\FileAction`. Symfony autoconfigures it with the `app.file_action` tag, and everything else is generic: the `POST /file/{action}[/{value}]` route, the `/file-view/{action}` page, the navigation entry, the home card and the single TypeScript sub-app, which reads the option schema from `data-*` attributes.
