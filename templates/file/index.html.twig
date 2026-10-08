@@ -9,10 +9,10 @@
 	<ul class="papers">
 		{% for tool in tools %}
 			<li class="paper crop-marks">
-				<a href="{{ path('app_view_' ~ tool.id) }}">
+				<a href="{{ path('app_view_action', {action: tool.name}) }}">
 					<span class="paper-spec">{{ tool.spec }}</span>
-					<span class="paper-title">{{ ('tools.' ~ tool.id)|trans }}</span>
-					<span class="paper-text">{{ ('home.card.' ~ tool.id ~ '.text')|trans }}</span>
+					<span class="paper-title">{{ ('tools.' ~ tool.name)|trans }}</span>
+					<span class="paper-text">{{ ('home.card.' ~ tool.name ~ '.text')|trans }}</span>
 				</a>
 			</li>
 		{% endfor %}

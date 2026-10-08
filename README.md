@@ -33,6 +33,35 @@ POST /file/rotate/{degrees}       0-360
 POST /file/sepia/{intensity}      1-100
 ```
 
+Images are rejected above 24 megapixels (`PixelBudget::MAX_PIXELS`): a 5 MB upload can still decode to hundreds of megapixels, so dimensions are read from the header before decoding. At 8 bytes per pixel (Q16) this stays well under the 256 MB Imagick memory limit set in `FileService`.
+
+## Adding an action
+
+An action is one PHP class in `src/Action/` that implements `App\Action\FileAction`. Symfony autoconfigures it with the `app.file_action` tag, and everything else is generic: the `POST /file/{action}[/{value}]` route, the `/file-view/{action}` page, the navigation entry, the home card and the single TypeScript sub-app, which reads the option schema from `data-*` attributes.
+
+```php
+final class BlurAction implements FileAction
+{
+    public function name(): string { return 'blur'; }
+
+    public function spec(): string { return '1-20'; }
+
+    public function option(): ActionOption { return ActionOption::range(1, 20, 1, 5); }
+
+    public function process(Imagick $image, int|string|null $value): void
+    {
+        $image->blurImage((int) $value, 1);
+    }
+}
+```
+
+- `option()` returns `ActionOption::range($min, $max, $step, $default)` (a slider prompt), `ActionOption::choice(['value' => 'Label'])` (a select on the page) or `null` for an action without a parameter (`POST /file/{action}`).
+- An action that changes the output format also implements `ChangesOutputFormat`, see `ConvertAction`.
+- Optional `#[AsTaggedItem(priority: n)]` sets the position in the navigation; without it the action comes last.
+- Translations, in `translations/messages.en.yaml` and `messages.pl.yaml`: `tools.{name}`, `home.card.{name}.text`, `{name}.title`, `{name}.header`, `{name}.description`, `{name}.button`, `error.{name}_failed`, and for an action with an option `error.{name}_invalid` plus `{name}.prompt_title` (range) or `{name}.option_label` (choice).
+
+That is the whole change: one class and two translation blocks. `tests/Fixtures/GrayscaleAction.php` is exactly such an action, registered only in the `test` environment (`when@test` in `config/services.yaml`), and `tests/Action/AddingAnActionTest.php` proves it gets a route, a page, a navigation entry and a home card with no other code.
+
 ## Tests
 
 ```bash

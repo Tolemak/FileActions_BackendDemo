@@ -33,6 +33,35 @@ POST /file/rotate/{degrees}       0-360
 POST /file/sepia/{intensity}      1-100
 ```
 
+Obrazy powyżej 24 megapikseli są odrzucane (`PixelBudget::MAX_PIXELS`): plik 5 MB może się zdekodować do setek megapikseli, więc wymiary są czytane z nagłówka przed dekodowaniem. Przy 8 bajtach na piksel (Q16) mieści się to z zapasem w limicie pamięci Imagick 256 MB ustawionym w `FileService`.
+
+## Dodawanie akcji
+
+Akcja to jedna klasa PHP w `src/Action/` implementująca `App\Action\FileAction`. Symfony nadaje jej tag `app.file_action` przez autokonfigurację, a reszta jest generyczna: trasa `POST /file/{action}[/{value}]`, strona `/file-view/{action}`, pozycja w nawigacji, karta na stronie głównej i jedna aplikacja TypeScript, która czyta schemat opcji z atrybutów `data-*`.
+
+```php
+final class BlurAction implements FileAction
+{
+    public function name(): string { return 'blur'; }
+
+    public function spec(): string { return '1-20'; }
+
+    public function option(): ActionOption { return ActionOption::range(1, 20, 1, 5); }
+
+    public function process(Imagick $image, int|string|null $value): void
+    {
+        $image->blurImage((int) $value, 1);
+    }
+}
+```
+
+- `option()` zwraca `ActionOption::range($min, $max, $step, $default)` (suwak), `ActionOption::choice(['wartość' => 'Etykieta'])` (lista wyboru na stronie) albo `null` dla akcji bez parametru (`POST /file/{action}`).
+- Akcja zmieniająca format wyjściowy implementuje też `ChangesOutputFormat`, zob. `ConvertAction`.
+- Opcjonalne `#[AsTaggedItem(priority: n)]` ustala miejsce w nawigacji; bez niego akcja ląduje na końcu.
+- Tłumaczenia w `translations/messages.en.yaml` i `messages.pl.yaml`: `tools.{name}`, `home.card.{name}.text`, `{name}.title`, `{name}.header`, `{name}.description`, `{name}.button`, `error.{name}_failed`, a dla akcji z opcją `error.{name}_invalid` oraz `{name}.prompt_title` (range) lub `{name}.option_label` (choice).
+
+To cała zmiana: jedna klasa i dwa bloki tłumaczeń. `tests/Fixtures/GrayscaleAction.php` jest właśnie taką akcją, zarejestrowaną tylko w środowisku `test` (`when@test` w `config/services.yaml`), a `tests/Action/AddingAnActionTest.php` dowodzi, że dostaje trasę, stronę, pozycję w nawigacji i kartę bez żadnego innego kodu.
+
 ## Testy
 
 ```bash
