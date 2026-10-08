@@ -1,5 +1,7 @@
 # FileActions
 
+[![CI](https://github.com/Tolemak/FileActions_BackendDemo/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/Tolemak/FileActions_BackendDemo/actions/workflows/deploy.yml)
+
 Wrzucasz obrazek, dostajesz go z powrotem przeskalowany, skonwertowany, skompresowany, obrócony albo w sepii. Symfony 7.4 + Imagick za małym API, frontend w TypeScript + FilePond, PL/EN. [file-actions.tolemak.pl](https://file-actions.tolemak.pl/)
 
 [English version](README.md)

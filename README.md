@@ -1,5 +1,7 @@
 # FileActions
 
+[![CI](https://github.com/Tolemak/FileActions_BackendDemo/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/Tolemak/FileActions_BackendDemo/actions/workflows/deploy.yml)
+
 Upload an image, get it back resized, converted, compressed, rotated or in sepia. Symfony 7.4 + Imagick behind a small API, with a TypeScript + FilePond frontend, PL/EN. [file-actions.tolemak.pl](https://file-actions.tolemak.pl/)
 
 [Polska wersja](README.pl.md)
