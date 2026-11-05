@@ -4,6 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
     { ignores: ['public/build', 'var', 'vendor', 'node_modules'] },
+    { rules: { complexity: ['error', 8] } },
     {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
         files: ['assets/**/*.{ts,js}'],
