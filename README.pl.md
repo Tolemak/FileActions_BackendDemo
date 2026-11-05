@@ -2,9 +2,9 @@
 
 [![status: done](https://img.shields.io/badge/status-done-blue)](https://github.com/Tolemak/FileActions_BackendDemo)
 
-Wrzucasz obrazek, dostajesz go z powrotem przeskalowany, skonwertowany, skompresowany, obrócony albo w sepii. Symfony 7.4 + Imagick za małym API, frontend w TypeScript + FilePond, PL/EN. [file-actions.tolemak.pl](https://file-actions.tolemak.pl/)
-
 [English version](README.md)
+
+Wrzucasz obrazek, dostajesz go z powrotem przeskalowany, skonwertowany, skompresowany, obrócony albo w sepii. Symfony 7.4 + Imagick za małym API, frontend w TypeScript + FilePond, PL/EN. [file-actions.tolemak.pl](https://file-actions.tolemak.pl/)
 
 ## Uruchomienie
 
