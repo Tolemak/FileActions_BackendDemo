@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE']
   pull_request:
     branches:
       - master
@@ -12,12 +13,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   ci:
-    uses: Tolemak/.github/.github/workflows/php-ci.yml@c2cb527de1abeb7ad38907fb52dfb1c9cedbbcec # v1.4.0
+    uses: Tolemak/.github/.github/workflows/php-ci.yml@78b533105915e536089edb90746b108b6b550464 # v2.0.0
     with:
       php-version: "8.3"
       extensions: imagick, zip, ctype, iconv
@@ -25,9 +26,18 @@ jobs:
       env: APP_ENV=test
       node-version: "22"
       node-scripts: lint typecheck test build
+      coverage-artifact: coverage-php
+
+  quality-gate:
+    needs: [ci]
+    if: ${{ !cancelled() }}
+    uses: Tolemak/.github/.github/workflows/quality-gate.yml@78b533105915e536089edb90746b108b6b550464 # v2.0.0
+    with:
+      needs: ${{ toJSON(needs) }}
+      coverage-paths: src/**/*.php
 
   image:
-    needs: ci
+    needs: [ci, quality-gate]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
@@ -49,11 +59,11 @@ jobs:
           -t "$IMAGE:${{ github.sha }}" -t "$IMAGE:latest" .
       - name: Smoke test the image
         run: |
-          flags="--network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges:true --user 12345:12345 --tmpfs /run/apache2:rw,noexec,nosuid,nodev,size=8m,mode=0700,uid=12345,gid=12345 --tmpfs /run/lock/apache2:rw,noexec,nosuid,nodev,size=8m,mode=0700,uid=12345,gid=12345 --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m,mode=0700,uid=12345,gid=12345"
-          docker run --rm $flags "$IMAGE:${{ github.sha }}" sh -c 'php -m | grep -q imagick && php -r "require \"vendor/autoload.php\";" && test -f public/build/.vite/manifest.json && test -r composer.json && test ! -w composer.json && . /etc/apache2/envvars && apache2 -t'
-          docker run -d --name smoke $flags "$IMAGE:${{ github.sha }}"
+          flags=(--network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges:true --user 12345:12345 --tmpfs "/run/apache2:rw,noexec,nosuid,nodev,size=8m,mode=0700,uid=12345,gid=12345" --tmpfs "/run/lock/apache2:rw,noexec,nosuid,nodev,size=8m,mode=0700,uid=12345,gid=12345" --tmpfs "/tmp:rw,noexec,nosuid,nodev,size=64m,mode=0700,uid=12345,gid=12345")
+          docker run --rm "${flags[@]}" "$IMAGE:${{ github.sha }}" sh -c 'php -m | grep -q imagick && php -r "require \"vendor/autoload.php\";" && test -f public/build/.vite/manifest.json && test -r composer.json && test ! -w composer.json && . /etc/apache2/envvars && apache2 -t'
+          docker run -d --name smoke "${flags[@]}" "$IMAGE:${{ github.sha }}"
           code=000
-          for i in $(seq 1 30); do
+          for _ in $(seq 1 30); do
             code=$(docker exec smoke php -r '$c = stream_context_create(["http" => ["ignore_errors" => true, "timeout" => 3]]); @file_get_contents("http://127.0.0.1:8080/theme-init.js", false, $c); echo substr($http_response_header[0] ?? "000 000", 9, 3);' || true)
             [ "$code" = 200 ] && break
             sleep 1
